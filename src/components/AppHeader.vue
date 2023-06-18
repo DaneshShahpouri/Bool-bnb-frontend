@@ -16,31 +16,74 @@ export default {
 </script>
 
 <template>
-  <nav class="navbar navbar-expand-lg bg-light">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">Navbar</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+  <nav id="navbar" class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="">
+        <div id="logo">
+          <img src="../../public/img/boolbnb-logo.png" alt="">
+        </div>
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <!-- Left Side Of Navbar -->
+        <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
+            <a class="nav-link" href="#">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Features</a>
+            <a class="nav-link" href="#">Apartments</a>
           </li>
+        </ul>
+
+        <!-- Right Side Of Navbar -->
+        <ul class="navbar-nav ml-auto">
+          <!-- Authentication Links -->
+          <!-- @guest -->
+          <li class="nav-item" v-if="this.store.userName == ''">
+            <a class="nav-link" href="http://127.0.0.1:8000/login">Login</a>
+          </li>
+          <li class="nav-item" v-if="this.store.userName == ''">
+            <a class="nav-link" href="http://127.0.0.1:8000/register">Register</a>
+          </li>
+          <!-- @if (Route::has('register'))
           <li class="nav-item">
-            <a class="nav-link" href="#">Pricing</a>
+            <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link disabled">Disabled</a>
+          @endif
+          @else -->
+          <li class="nav-item dropdown" v-else>
+            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">{{ this.store.userName }}</a>
+
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="">Dashboard</a>
+              <a class="dropdown-item" href="">Logout</a>
+
+              <form id="logout-form" action="" method="POST" class="d-none">
+
+              </form>
+            </div>
           </li>
+
         </ul>
       </div>
     </div>
   </nav>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+#navbar {
+  #logo {
+    width: 150px;
+
+    img {
+      width: 100%;
+    }
+  }
+}
+</style>
