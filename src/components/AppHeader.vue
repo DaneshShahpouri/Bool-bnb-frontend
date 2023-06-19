@@ -58,9 +58,11 @@ export default {
           @else -->
           <li class="nav-item dropdown" v-else>
             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-              aria-haspopup="true" aria-expanded="false">{{ this.store.userName }}</a>
+              aria-haspopup="true" aria-expanded="false"
+              v-if="this.store.userName != '' || this.store.userName != null">{{
+                this.store.userName }}</a>
 
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown" v-else>
               <a class="dropdown-item" href="">Dashboard</a>
               <a class="dropdown-item" href="">Logout</a>
 

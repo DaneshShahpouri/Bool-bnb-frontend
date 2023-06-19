@@ -21,7 +21,7 @@ export default {
                 // console.log(response)
                 response.data.results.forEach(apartment => {
                     this.store.apartments.push(JSON.parse(JSON.stringify(apartment)))
-                    this.store.userName = response.data.user
+                    // this.store.userName = response.data.user
 
                 });
                 this.setApartments()

@@ -118,6 +118,18 @@ export default {
                     this.store.indexApartments = this.store.indexApartments.filter(apartment => apartment.name.toLowerCase().includes(this.searchInput.toLowerCase()) || apartment.address.toLowerCase().includes(this.searchInput.toLowerCase()))
                 }
 
+                if (this.searchInputRooms > 0) {
+                    this.store.indexApartments = this.store.indexApartments.filter(apartment => apartment.rooms_number >= this.searchInputRooms)
+                }
+
+                if (this.searchInputBeds > 0) {
+                    this.store.indexApartments = this.store.indexApartments.filter(apartment => apartment.beds_number >= this.searchInputBeds)
+                }
+
+                if (this.searchInputBathrooms > 0) {
+                    this.store.indexApartments = this.store.indexApartments.filter(apartment => apartment.bathrooms_number >= this.searchInputBathrooms)
+                }
+
                 if (this.store.indexApartments.length == 0) {
                     this.store.searchError = 'Sorry. No matching items found.'
                 }
@@ -134,6 +146,7 @@ export default {
                 if (this.store.indexApartments.length == 0) {
                     this.store.searchError = 'Sorry. No matching items found.'
                 }
+
 
             }
 
@@ -159,19 +172,19 @@ export default {
             <div class="_numb-imput-wrapper" v-if="isAdvanceSearch">
                 <i class="fa-solid fa-door-closed"></i>
                 <input type="number" class="_numb-imput" aria-label="rooms" v-model="searchInputRooms" @change="search()"
-                    placeholder="rooms">
+                    placeholder="rooms" min="0" max="30">
             </div>
             <!-- beds -->
             <div class="_numb-imput-wrapper" v-if="isAdvanceSearch">
                 <i class="fa-solid fa-bed"></i>
                 <input class="_numb-imput" type="number" aria-label="beds" v-model="searchInputBeds" @change="search()"
-                    placeholder="beds">
+                    placeholder="beds" min="0" max="60">
             </div>
             <!-- bathrooms -->
             <div class="_numb-imput-wrapper" v-if="isAdvanceSearch">
                 <i class="fa-solid fa-bath"></i>
                 <input class="_numb-imput" type="number" aria-label="bathrooms" v-model="searchInputBathrooms"
-                    @change="search()" placeholder="bath">
+                    @change="search()" placeholder="bath" min="0" max="20">
             </div>
 
             <!-- button -->
