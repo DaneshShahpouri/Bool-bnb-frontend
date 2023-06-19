@@ -1,37 +1,51 @@
 <script>
 import axios from 'axios';
 import { store } from '../store.js';
+import AppSearch from '../components/AppSearch.vue';
 
 export default {
     name: 'AppHome',
     data() {
         return {
             store,
-            apartments: [],
         }
+    },
+
+    components: {
+        AppSearch
     },
 
     methods: {
         getApartments() {
             axios.get(this.store.apiPath + 'apartments').then(response => {
-                
                 response.data.results.forEach(apartment => {
-                    this.apartments.push(apartment)
+                    this.store.apartments.push(JSON.parse(JSON.stringify(apartment)))
+
                 });
+                this.setApartments()
             })
+        },
+
+        setApartments() {
+            this.store.apartments.forEach(apartment => {
+                this.store.indexApartments.push(JSON.parse(JSON.stringify(apartment)))
+            })
+
         }
     },
 
     created() {
         this.getApartments();
+        this.setApartments();
 
-    },
+    }
 }
 </script>
 
 <template>
-    <div class="container align-items-stretch mt-5" id="AppHome">
-        <div class="card _card" v-for="apartment in  this.apartments ">
+    <AppSearch></AppSearch>
+    <div class="container align-items-stretch mt-5" id="AppHome" v-if="this.store.searchError === ''">
+        <div class="card _card" v-for="apartment in  this.store.indexApartments ">
             <div class="img-wrapper">
                 <img class="card-img-top"
                     :src="(apartment.cover_image != null && (apartment.cover_image.slice(apartment.cover_image.length - 3, apartment.cover_image.length) == 'png' || apartment.cover_image.slice(apartment.cover_image.length - 3, apartment.cover_image.length) == 'jpg') ? (this.store.urlImg + apartment.cover_image) : 'https://www.kuleuven.be/communicatie/congresbureau/fotos-en-afbeeldingen/no-image.png/image')"
@@ -48,6 +62,9 @@ export default {
             </div>
         </div>
     </div>
+    <div class="alert alert-danger container" role="alert" v-else>
+        {{ this.store.searchError }}
+    </div>
 </template>
 
 <style lang="scss" scoped>
@@ -58,7 +75,7 @@ export default {
     flex-flow: row wrap;
 
     ._card {
-        width: calc((100% / 4) - 2em);
+        width: calc((100% / 4) - 1em);
         border: 1px solid lightgray;
         border-radius: 20px;
         padding: 1em;

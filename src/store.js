@@ -1,6 +1,12 @@
 import { reactive } from 'vue';
 
 export const store = reactive({
+    //Home(index)
+    //tutti gli appartmenti
+    apartments: [],
+    //quelli visualizzati in home
+    indexApartments: [],
+
     //USER
     userName: '',
 
@@ -13,4 +19,7 @@ export const store = reactive({
     message_username: '',
     message_content: '',
     message_email: '',
+
+    //search
+    searchError: ''
 });
