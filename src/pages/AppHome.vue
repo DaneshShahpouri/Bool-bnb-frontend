@@ -18,8 +18,10 @@ export default {
     methods: {
         getApartments() {
             axios.get(this.store.apiPath + 'apartments').then(response => {
+                // console.log(response)
                 response.data.results.forEach(apartment => {
                     this.store.apartments.push(JSON.parse(JSON.stringify(apartment)))
+                    this.store.userName = response.data.user
 
                 });
                 this.setApartments()
@@ -38,6 +40,7 @@ export default {
         this.getApartments();
         this.setApartments();
 
+
     }
 }
 </script>
@@ -48,7 +51,7 @@ export default {
         <div class="card _card" v-for="apartment in  this.store.indexApartments ">
             <div class="img-wrapper">
                 <img class="card-img-top"
-                    :src="(apartment.cover_image != null && (apartment.cover_image.slice(apartment.cover_image.length - 3, apartment.cover_image.length) == 'png' || apartment.cover_image.slice(apartment.cover_image.length - 3, apartment.cover_image.length) == 'jpg') ? (this.store.urlImg + apartment.cover_image) : 'https://www.kuleuven.be/communicatie/congresbureau/fotos-en-afbeeldingen/no-image.png/image')"
+                    :src="(apartment.cover_image != null && (apartment.cover_image.slice(apartment.cover_image.length - 3, apartment.cover_image.length) == 'png' || apartment.cover_image.slice(apartment.cover_image.length - 3, apartment.cover_image.length) == 'jpg' || apartment.cover_image.slice(apartment.cover_image.length - 3, apartment.cover_image.length) == 'ebp' || apartment.cover_image.slice(apartment.cover_image.length - 3, apartment.cover_image.length) == 'peg') ? (this.store.urlImg + apartment.cover_image) : 'https://www.kuleuven.be/communicatie/congresbureau/fotos-en-afbeeldingen/no-image.png/image')"
                     alt="Card image cap">
             </div>
             <h5 class="card-title">{{ apartment.name.length > 25 ? apartment.name.substring(0, 25) + '...' :
