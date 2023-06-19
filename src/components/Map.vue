@@ -10,6 +10,8 @@ export default {
         }
     },
 
+    
+
     mounted() {
 
         this.MapCreation()
@@ -21,9 +23,12 @@ export default {
 
             MapCreation() {
 
+            var center = [this.store.longitude,this.store.latitude]    
             var map = tt.map({
             key: "8AyhtFuGo44d57QodNOzeOGIsIaJsEq5",
             container: "map",
+            center : center,
+            zoom : 14,
             })
     
 

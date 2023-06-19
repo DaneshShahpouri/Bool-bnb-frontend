@@ -9,29 +9,60 @@ export default {
     data() {
         return {
             store,
-            apartment: [],
+            apartment: {},
+            
         }
     },
 
     components: {
         AppMessageForm,
-        Map,
+      
     },
 
     methods: {
         getApartment() {
             axios.get(this.store.apiPath + 'apartments/' + this.$route.params.slug).then(response => {
                 this.apartment = response.data.results
-                //console.log(response.data.results)
+                
+                 
                 this.store.message_apartment_id = response.data.results.id;
-                //console.log(this.store.message_apartment_id)
+               
+
+                this.MapCreation()
             })
         },
+
+
+        MapCreation() {
+
+            
+            var center = [parseFloat(this.apartment.longitude),parseFloat(this.apartment.latitude)]
+            var map = tt.map({
+            key: "8AyhtFuGo44d57QodNOzeOGIsIaJsEq5",
+            container: "map",
+            center : center,
+            zoom : 15,
+            })
+
+            //Creazione puntatore cui centro sono le coordinate dell'appartamento che stiamo visualizzando
+            const marker = new tt.Marker()
+                    .setLngLat([this.apartment.longitude, this.apartment.latitude])
+                marker.addTo(map);
+
+                //popup al click sul puntatore che permette di visualizzare alcune specifiche dell'appartamento
+                marker.setPopup(new tt.Popup().setHTML(`<h6 class="p-3"><i class="fa-solid fa-house"></i> ${this.apartment.name}</h6><p>${this.apartment.address}</p>`));
+        },
+
+        
     },
 
+    
+
     mounted() {
-        this.getApartment()
-    },
+            this.getApartment()
+            
+        },
+
 }
 </script>
 <template>
@@ -65,8 +96,11 @@ export default {
             <AppMessageForm></AppMessageForm>
             
         </div>
-    
-        <Map class=""></Map>
+        
+        <div class="container" style="height: 500px;">
+            <div id="map" style="width: 100% ; height: 100%; "></div>
+        </div>
+        
     </div>
 </template>
 
