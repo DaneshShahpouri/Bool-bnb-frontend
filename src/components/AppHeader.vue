@@ -18,7 +18,7 @@ export default {
 <template>
   <nav id="navbar" class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
     <div class="container">
-      <a class="navbar-brand d-flex align-items-center" href="">
+      <a class="navbar-brand d-flex align-items-center" href="http://localhost:5173/">
         <div id="logo">
           <img src="../../public/img/boolbnb-logo.png" alt="">
         </div>
@@ -33,11 +33,11 @@ export default {
         <!-- Left Side Of Navbar -->
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <a class="nav-link" href="#">Home</a>
+            <a class="nav-link" href="http://localhost:5173/">Home</a>
           </li>
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a class="nav-link" href="#">Apartments</a>
-          </li>
+          </li> -->
         </ul>
 
         <!-- Right Side Of Navbar -->
