@@ -23,6 +23,7 @@ export default {
         getApartment() {
             axios.get(this.store.apiPath + 'apartments/' + this.$route.params.slug).then(response => {
                 this.apartment = response.data.results
+                console.log(this.apartment)
                 
                  
                 this.store.message_apartment_id = response.data.results.id;
@@ -35,22 +36,28 @@ export default {
 
         MapCreation() {
 
-            
             var center = [parseFloat(this.apartment.longitude),parseFloat(this.apartment.latitude)]
+            //Creazione mappa 
             var map = tt.map({
+
+
+            //Parametri mappa   
             key: "8AyhtFuGo44d57QodNOzeOGIsIaJsEq5",
             container: "map",
             center : center,
             zoom : 15,
+            language : 'IT',
             })
 
-            //Creazione puntatore cui centro sono le coordinate dell'appartamento che stiamo visualizzando
+            //Creazione puntatore sulla mappa
             const marker = new tt.Marker()
+
+                    //Settaggio puntatore mappa con coordinate uguali alle coordinate dell'appartamento visualizzato
                     .setLngLat([this.apartment.longitude, this.apartment.latitude])
                 marker.addTo(map);
 
                 //popup al click sul puntatore che permette di visualizzare alcune specifiche dell'appartamento
-                marker.setPopup(new tt.Popup().setHTML(`<h6 class="p-3"><i class="fa-solid fa-house"></i> ${this.apartment.name}</h6><p>${this.apartment.address}</p>`));
+                marker.setPopup(new tt.Popup().setHTML(`<h6 class="p-3"><i class="fa-solid fa-house"></i> ${this.apartment.name}</h6><p><i class="fa-solid fa-location-dot"></i> ${this.apartment.address}</p>`));
         },
 
         
