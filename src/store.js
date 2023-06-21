@@ -21,5 +21,6 @@ export const store = reactive({
     message_email: '',
 
     //search
-    searchError: ''
+    searchError: '',
+    searchInput: ''
 });

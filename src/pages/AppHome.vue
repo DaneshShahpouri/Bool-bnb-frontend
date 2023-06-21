@@ -8,6 +8,9 @@ export default {
     data() {
         return {
             store,
+            //formricerca
+            radius: 20,
+            address: '',
         }
     },
 
@@ -17,23 +20,40 @@ export default {
 
     methods: {
         getApartments() {
-            axios.get(this.store.apiPath + 'apartments').then(response => {
-                // console.log(response)
-                response.data.results.forEach(apartment => {
-                    this.store.apartments.push(JSON.parse(JSON.stringify(apartment)))
-                    // this.store.userName = response.data.user
+            if (this.store.searchInput != '') {
+                axios.get('http://127.0.0.1:8000/api/apartments/' + this.store.searchInput).then(response => {
+                    console.log(response)
+                    this.store.apartments = []
+                    response.data.results.forEach(apartment => {
+                        this.store.apartments.push(JSON.parse(JSON.stringify(apartment)))
+                        // this.store.userName = response.data.user
 
-                });
-                this.setApartments()
-            })
+                    });
+                    this.setApartments()
+                })
+            } else {
+                axios.get(this.store.apiPath + 'apartments').then(response => {
+                    //console.log(response)
+                    this.store.apartments = []
+                    response.data.results.forEach(apartment => {
+                        this.store.apartments.push(JSON.parse(JSON.stringify(apartment)))
+                        // this.store.userName = response.data.user
+
+                    });
+                    this.setApartments()
+                })
+            }
         },
 
         setApartments() {
+            this.store.indexApartments = []
             this.store.apartments.forEach(apartment => {
                 this.store.indexApartments.push(JSON.parse(JSON.stringify(apartment)))
             })
 
-        }
+        },
+
+
     },
 
     created() {
@@ -42,11 +62,31 @@ export default {
 
 
     }
+
 }
 </script>
 
 <template>
-    <AppSearch></AppSearch>
+    <!-- <AppSearch></AppSearch> -->
+
+    <!-- FORM RICERCA -->
+    <form class="container" @submit.prevent="getApartments()">
+
+        <div class="mb-3">
+            <label for="address" class="mb-2">Address Form*</label>
+            <input class="form-control my-label" type="text" name="address" id="address" v-model="this.store.searchInput">
+        </div>
+
+        <div>
+            <input type="range" id="radius" name="radius" min="0" max="100" v-model="this.radius">
+            <label for="radius">Radius</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary">invia</button>
+
+    </form>
+    <!-- FORM RICERCA -->
+
     <div class="container align-items-stretch mt-5" id="AppHome" v-if="this.store.searchError === ''">
         <div class="card _card" v-for="apartment in  this.store.indexApartments ">
             <div class="img-wrapper">
