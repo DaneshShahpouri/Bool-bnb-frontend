@@ -21,7 +21,7 @@ export default {
 
     methods: {
         getApartment() {
-            axios.get(this.store.apiPath + 'apartments/' + this.$route.params.slug).then(response => {
+            axios.get(this.store.apiPath + 'apartments-show/' + this.$route.params.slug).then(response => {
                 this.apartment = response.data.results
                 console.log(this.apartment)
                 
