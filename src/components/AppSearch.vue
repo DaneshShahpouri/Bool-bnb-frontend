@@ -9,6 +9,7 @@ export default {
         return {
             store,
             isAdvanceSearch: false,
+            isSearch: false,
             latitudine: "",
             longitudine: "",
             zoom: "",
@@ -216,11 +217,99 @@ export default {
             console.log(z.toString() + "/" + x.toString() + "/" + y.toString());
 
             return z.toString() + "/" + x.toString() + "/" + y.toString()
+        },
+
+        backSearch() {
+
+            if (this.store.searchInput != '') {
+                axios.get('https://api.tomtom.com/search/2/search/' + this.store.searchInput + '.json?countrySet=IT&key=8AyhtFuGo44d57QodNOzeOGIsIaJsEq5').then(res => {
+                    let city_lat = res.data.results[0].position.lat
+                    let city_lon = res.data.results[0].position.lon
+
+
+
+                    axios.get('http://127.0.0.1:8000/api/apartments/getapartment/' + city_lat + '/' + city_lon + '/' + this.store.searchRange + '/' + this.searchInputRooms + '/' + this.searchInputBeds + '/' + this.searchInputBathrooms + '/' + '1').then(res => {
+                        console.log(res.data.results)
+                        this.store.indexApartments = [];
+                        this.store.indexApartments = res.data.results;
+
+                    })
+
+                })
+            } else {
+                axios.get('http://127.0.0.1:8000/api/apartments').then(res => {
+                    this.store.indexApartments = res.data.results;
+                })
+            }
+
+        },
+
+        setIsSearch() {
+            if (this.isSearch) {
+
+                this.isSearch == false
+
+            } else {
+                setTimeout(
+                    this.isSearch == true, 1000
+                )
+            }
+        },
+
+        setInput(parametro) {
+            this.store.searchInput = parametro
+            this.isSearch = true
+            this.backSearch()
+            setTimeout(() => {
+
+                this.store.searchInput = '';
+                this.isSearch = false
+            }, 1000
+            )
+
+        },
+
+        advicedCity() {
+
+            if (this.isSearch == false) {
+                axios.get('https://api.tomtom.com/search/2/structuredGeocode.json?countrySet=IT&key=8AyhtFuGo44d57QodNOzeOGIsIaJsEq5&municipality=' + this.store.searchInput).then(res => {
+                    this.store.arraySuggestion = []
+
+                    let firstCountry = res.data.results[0]
+                    let secondCountry = res.data.results[1]
+
+                    if (firstCountry != undefined) {
+                        this.store.arraySuggestion.push(firstCountry)
+                    }
+                    if (secondCountry != undefined) {
+                        this.store.arraySuggestion.push(secondCountry)
+                    }
+
+
+
+
+                    axios.get('https://api.tomtom.com/search/2/structuredGeocode.json?countrySet=IT&key=8AyhtFuGo44d57QodNOzeOGIsIaJsEq5&streetName=' + this.store.searchInput).then(res => {
+
+
+                        let firstStreet = res.data.results[0]
+                        let secondStreet = res.data.results[1]
+
+                        if (firstStreet != undefined && !(this.store.arraySuggestion.includes(firstStreet))) {
+                            this.store.arraySuggestion.push(firstStreet)
+                        }
+                        if (secondStreet != undefined && !(this.store.arraySuggestion.includes(secondStreet))) {
+                            this.store.arraySuggestion.push(secondStreet)
+                        }
+                    })
+                    //console.log(this.store.arraySuggestion)
+                })
+            }
         }
     },
 
     created() {
         this.getServices();
+        this.backSearch()
 
     },
 }
@@ -231,36 +320,50 @@ export default {
         <div class="input-group my-3">
             <button class="input-group-text btn _btn-search" @click="searchBool()">Advance Search</button>
             <!-- input di ricerca stringa -->
-            <input type="text" aria-label="search" class="form-control _search" v-model="searchInput" @change="search()"
-                :placeholder="isAdvanceSearch ? 'Search by city or name' : 'Search by name'">
+            <input type="text" aria-label="search" class="form-control _search" v-model="this.store.searchInput"
+                @input="advicedCity(), backSearch()" placeholder="Search by city or address">
+
+            <div class="_menu-suggerimenti"
+                v-show="this.store.searchInput != '' && this.store.arraySuggestion.length != 0 && this.isSearch == false">
+                <ul>
+                    <li v-for=" element  in  this.store.arraySuggestion "
+                        @click="setInput(element.address.freeformAddress)">{{
+                            element.address.freeformAddress }}</li>
+                </ul>
+            </div>
 
             <!-- Rooms -->
             <div class="_numb-imput-wrapper" v-if="isAdvanceSearch">
                 <i class="fa-solid fa-door-closed"></i>
-                <input type="number" class="_numb-imput" aria-label="rooms" v-model="searchInputRooms" @change="search()"
-                    placeholder="rooms" min="0" max="30">
+                <input type="number" class="_numb-imput" aria-label="rooms" v-model="searchInputRooms"
+                    @change="backSearch()" placeholder="rooms" min="0" max="30">
             </div>
             <!-- beds -->
             <div class="_numb-imput-wrapper" v-if="isAdvanceSearch">
                 <i class="fa-solid fa-bed"></i>
-                <input class="_numb-imput" type="number" aria-label="beds" v-model="searchInputBeds" @change="search()"
+                <input class="_numb-imput" type="number" aria-label="beds" v-model="searchInputBeds" @change="backSearch()"
                     placeholder="beds" min="0" max="60">
             </div>
             <!-- bathrooms -->
             <div class="_numb-imput-wrapper" v-if="isAdvanceSearch">
                 <i class="fa-solid fa-bath"></i>
                 <input class="_numb-imput" type="number" aria-label="bathrooms" v-model="searchInputBathrooms"
-                    @change="search()" placeholder="bath" min="0" max="20">
+                    @change="backSearch()" placeholder="bath" min="0" max="20">
+            </div>
+
+            <!-- RANGE -->
+            <div class="container">
+                <input type="range" v-model="this.store.searchRange">
             </div>
 
             <!-- button -->
 
-            <button class="input-group-text btn _btn-search" @click="search()">Search</button>
+            <button class="input-group-text btn _btn-search" @click="backSearch()">Search</button>
         </div>
         <!-- services -->
         <div class="bottom-side-search d-flex flex-wrap my-2" v-if="isAdvanceSearch">
-            <div class="form-check _mycheckwrapper my-3" v-for="service in this.services">
-                <input class="form-check-input _mycheck" type="checkbox" :value="service.id" @click="search()">
+            <div class="form-check _mycheckwrapper my-3" v-for=" service  in  this.services ">
+                <input class="form-check-input _mycheck" type="checkbox" :value="service.id" @click="backSearch()">
                 <div class="d-flex flex-column align-items-start _myiconwrapper">
                     <span class="h2 d-flex justify-content-center w-100">
                         <i :class="this.getIconsClass(service.icon)"></i>
@@ -290,6 +393,7 @@ export default {
     width: 90%;
     margin: 1em auto;
     margin-bottom: 5em;
+    position: relative;
 
 
     ._search {
@@ -299,6 +403,18 @@ export default {
             box-shadow: none;
             border: 1px solid lightgray;
         }
+
+    }
+
+    ._menu-suggerimenti {
+        position: absolute;
+        top: 50px;
+        left: 170px;
+        width: 200px;
+        padding: .5em;
+        border: 1px solid red;
+        background: #c3c3c3;
+        z-index: 2;
     }
 
     ._numb-imput-wrapper {

@@ -10,7 +10,7 @@ export default {
             store,
             //formricerca
             radius: 20,
-            address: '',
+
         }
     },
 
@@ -67,10 +67,10 @@ export default {
 </script>
 
 <template>
-    <!-- <AppSearch></AppSearch> -->
+    <AppSearch></AppSearch>
 
     <!-- FORM RICERCA -->
-    <form class="container" @submit.prevent="getApartments()">
+    <!-- <form class="container" @submit.prevent="getApartments()">
 
         <div class="mb-3">
             <label for="address" class="mb-2">Address Form*</label>
@@ -84,7 +84,7 @@ export default {
 
         <button type="submit" class="btn btn-primary">invia</button>
 
-    </form>
+    </form> -->
     <!-- FORM RICERCA -->
 
     <div class="container align-items-stretch mt-5" id="AppHome" v-if="this.store.searchError === ''">
