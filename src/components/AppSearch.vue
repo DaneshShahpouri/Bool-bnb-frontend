@@ -10,15 +10,18 @@ export default {
             store,
             isAdvanceSearch: false,
             isSearch: false,
+            searchInputRooms: '',
+            searchInputBeds: '',
+            searchInputBathrooms: '',
+            timeoutIsSearch: '',
+            //-------------
             latitudine: "",
             longitudine: "",
             zoom: "",
             services: [],
             tempServices: [],
             searchInput: '',
-            searchInputRooms: null,
-            searchInputBeds: null,
-            searchInputBathrooms: null,
+
 
         }
     },
@@ -54,21 +57,22 @@ export default {
                 this.store.searchError = ''
                 this.store.indexApartments = this.store.apartments
                 this.searchInput = ''
-                this.searchInputRooms = null
-                this.searchInputBeds = null
-                this.searchInputBathrooms = null
+                this.searchInputRooms = ''
+                this.searchInputBeds = ''
+                this.searchInputBathrooms = ''
             } else {
                 this.isAdvanceSearch = true
                 //azzeramento variabili
                 this.store.searchError = ''
                 this.store.indexApartments = this.store.apartments
                 this.searchInput = ''
-                this.searchInputRooms = null
-                this.searchInputBeds = null
-                this.searchInputBathrooms = null
+                this.searchInputRooms = ''
+                this.searchInputBeds = ''
+                this.searchInputBathrooms = ''
             }
         },
 
+        //Logica FrontEnd (da togliere (Non ora))
         search() {
 
             if (this.isAdvanceSearch) {
@@ -141,9 +145,9 @@ export default {
                 this.store.indexApartments = this.store.apartments
                 this.store.searchError = ''
 
-                if (this.searchInput != '') {
-                    //console.log(this.store.indexApartments.filter(apartment => ((apartment.name).toLowerCase()).includes(this.searchInput.toLowerCase())))
-                    this.store.indexApartments = this.store.indexApartments.filter(apartment => apartment.name.toLowerCase().includes(this.searchInput.toLowerCase()))
+                if (this.searchInputName != '') {
+                    //console.log(this.store.indexApartments.filter(apartment => ((apartment.name).toLowerCase()).includes(this.searchInputName.toLowerCase())))
+                    this.store.indexApartments = this.store.indexApartments.filter(apartment => apartment.name.toLowerCase().includes(this.store.searchInputName.toLowerCase()))
                 }
 
                 if (this.store.indexApartments.length == 0) {
@@ -153,8 +157,11 @@ export default {
 
             }
 
+            //console.log('funziono')
+
         },
 
+        //Conversione lat-long-zoom (non usata)
         latLonConversion(lat, lon, zoomLevel) {
             const MIN_ZOOM_LEVEL = 0
             const MAX_ZOOM_LEVEL = 22
@@ -214,93 +221,121 @@ export default {
                 )
             )
 
-            console.log(z.toString() + "/" + x.toString() + "/" + y.toString());
+            //console.log(z.toString() + "/" + x.toString() + "/" + y.toString());
 
             return z.toString() + "/" + x.toString() + "/" + y.toString()
         },
 
+        //Logica Backend
         backSearch() {
+            this.store.searchError = ''
+            if (this.isSearch == false) {
+                //--debug--
+                console.log('Ricerca backend')
+                //--debug--
 
-            if (this.store.searchInput != '') {
-                axios.get('https://api.tomtom.com/search/2/search/' + this.store.searchInput + '.json?countrySet=IT&key=8AyhtFuGo44d57QodNOzeOGIsIaJsEq5').then(res => {
-                    let city_lat = res.data.results[0].position.lat
-                    let city_lon = res.data.results[0].position.lon
+                if (this.store.searchInput != '') {
+                    axios.get('https://api.tomtom.com/search/2/search/' + this.store.searchInput + '.json?countrySet=IT&key=8AyhtFuGo44d57QodNOzeOGIsIaJsEq5').then(res => {
+                        console.log(res.data.results.length)
+                        if (res.data.results.length > 0) {
+                            let city_lat = res.data.results[0].position.lat
+                            let city_lon = res.data.results[0].position.lon
 
-
-
-                    axios.get('http://127.0.0.1:8000/api/apartments/getapartment/' + city_lat + '/' + city_lon + '/' + this.store.searchRange + '/' + this.searchInputRooms + '/' + this.searchInputBeds + '/' + this.searchInputBathrooms + '/' + '1').then(res => {
-                        console.log(res.data.results)
-                        this.store.indexApartments = [];
-                        this.store.indexApartments = res.data.results;
-
+                            axios.get('http://127.0.0.1:8000/api/apartments/getapartment/' + city_lat + '/' + city_lon + '/' + (this.searchInputRooms == '' ? '0/' : this.searchInputRooms + '/') + (this.searchInputBeds == '' ? '0/' : this.searchInputBeds + '/') + (this.searchInputBathrooms == '0/' ? '' : this.searchInputBathrooms) + '1').then(resu => {
+                                //console.log(res.data.results)
+                                //console.log('http://127.0.0.1:8000/api/getapartment/' + city_lat + '/' + city_lon + '/' + this.store.searchRange + '/' + this.searchInputRooms + '/' + this.searchInputBeds + '/' + this.searchInputBathrooms + '/' + '1')
+                                this.store.indexApartments = [];
+                                this.store.indexApartments = resu.data.results;
+                                if (resu.data.results.length == 0) {
+                                    this.store.searchError = 'Sorry. No matching items found.'
+                                }
+                            })
+                        }
                     })
+                } else if (this.store.searchInput == '' && (this.searchInputRooms != '' || this.searchInputBeds != '' || this.searchInputBathrooms != '')) {
+                    axios.get('http://127.0.0.1:8000/api/apartmentempty/' + (this.searchInputRooms == '' ? '0/' : this.searchInputRooms + '/') + (this.searchInputBeds == '' ? '0/' : this.searchInputBeds + '/') + (this.searchInputBathrooms == '0' ? '' : this.searchInputBathrooms)).then(resul => {
+                        //console.log(res.data.results)
+                        this.store.indexApartments = [];
+                        this.store.indexApartments = resul.data.results;
+                        if (resul.data.results.length == 0) {
+                            this.store.searchError = 'Sorry. No matching items found.'
+                        }
+                    })
+                } else {
+                    axios.get('http://127.0.0.1:8000/api/apartments').then(result => {
+                        this.store.indexApartments = [];
+                        this.store.indexApartments = result.data.results;
+                        if (result.data.results.length == 0) {
+                            this.store.searchError = 'Sorry. No matching items found.'
+                        }
+                    })
+                }
 
-                })
-            } else {
-                axios.get('http://127.0.0.1:8000/api/apartments').then(res => {
-                    this.store.indexApartments = res.data.results;
-                })
             }
 
+            this.setIsSearch()
         },
 
+        //riduce il numero di chiamate axios (non usata... credo)
         setIsSearch() {
-            if (this.isSearch) {
-
-                this.isSearch == false
-
+            if (this.isSearch == false) {
+                this.isSearch = true
+                //console.log(this.isSearch)
+                //clearTimeout(this.timeoutIsSearch)
             } else {
-                setTimeout(
-                    this.isSearch == true, 1000
-                )
+                this.timeoutIsSearch = setTimeout(() => {
+                    this.isSearch = false
+                    //console.log(this.isSearch)
+                }, 700)
             }
         },
 
+        //click sul consiglio per cambiare nome della citta
         setInput(parametro) {
             this.store.searchInput = parametro
-            this.isSearch = true
+            this.setIsSearch()
             this.backSearch()
-            setTimeout(() => {
-
-                this.store.searchInput = '';
-                this.isSearch = false
-            }, 1000
-            )
+            if (this.store.indexApartments.length == 0) {
+                this.store.searchError = 'Sorry. No matching items found.'
+            }
 
         },
 
+        //consigli citta
         advicedCity() {
 
-            if (this.isSearch == false) {
+            if (this.store.searchInput.length > 3) {
                 axios.get('https://api.tomtom.com/search/2/structuredGeocode.json?countrySet=IT&key=8AyhtFuGo44d57QodNOzeOGIsIaJsEq5&municipality=' + this.store.searchInput).then(res => {
                     this.store.arraySuggestion = []
 
                     let firstCountry = res.data.results[0]
                     let secondCountry = res.data.results[1]
+                    let thirdCountry = res.data.results[2]
 
                     if (firstCountry != undefined) {
                         this.store.arraySuggestion.push(firstCountry)
                     }
-                    if (secondCountry != undefined) {
+                    if (secondCountry != undefined && secondCountry != firstCountry) {
                         this.store.arraySuggestion.push(secondCountry)
+                    }
+                    if (thirdCountry != undefined && thirdCountry != firstCountry && thirdCountry != secondCountry) {
+                        this.store.arraySuggestion.push(thirdCountry)
                     }
 
 
+                    // axios.get('https://api.tomtom.com/search/2/structuredGeocode.json?countrySet=IT&key=8AyhtFuGo44d57QodNOzeOGIsIaJsEq5&streetName=' + this.store.searchInput).then(res => {
 
 
-                    axios.get('https://api.tomtom.com/search/2/structuredGeocode.json?countrySet=IT&key=8AyhtFuGo44d57QodNOzeOGIsIaJsEq5&streetName=' + this.store.searchInput).then(res => {
+                    //     let firstStreet = res.data.results[0]
+                    //     let secondStreet = res.data.results[1]
 
-
-                        let firstStreet = res.data.results[0]
-                        let secondStreet = res.data.results[1]
-
-                        if (firstStreet != undefined && !(this.store.arraySuggestion.includes(firstStreet))) {
-                            this.store.arraySuggestion.push(firstStreet)
-                        }
-                        if (secondStreet != undefined && !(this.store.arraySuggestion.includes(secondStreet))) {
-                            this.store.arraySuggestion.push(secondStreet)
-                        }
-                    })
+                    //     if (firstStreet != undefined && !(this.store.arraySuggestion.includes(firstStreet))) {
+                    //         this.store.arraySuggestion.push(firstStreet)
+                    //     }
+                    //     if (secondStreet != undefined && secondStreet !== firstCountry && secondStreet !== firstStreet && secondStreet !== secondCountry) {
+                    //         this.store.arraySuggestion.push(secondStreet)
+                    //     }
+                    // })
                     //console.log(this.store.arraySuggestion)
                 })
             }
@@ -319,9 +354,13 @@ export default {
 
         <div class="input-group my-3">
             <button class="input-group-text btn _btn-search" @click="searchBool()">Advance Search</button>
-            <!-- input di ricerca stringa -->
+            <!-- input di ricerca city -->
             <input type="text" aria-label="search" class="form-control _search" v-model="this.store.searchInput"
-                @input="advicedCity(), backSearch()" placeholder="Search by city or address">
+                @input="advicedCity(), backSearch(), setIsSearch()" placeholder="Search by city or address"
+                v-if="isAdvanceSearch">
+            <!-- input di ricerca name -->
+            <input type="text" aria-label="search" class="form-control _search" v-model="this.store.searchInputName"
+                @input="search()" placeholder="Search by name" v-else>
 
             <div class="_menu-suggerimenti"
                 v-show="this.store.searchInput != '' && this.store.arraySuggestion.length != 0 && this.isSearch == false">
@@ -351,19 +390,17 @@ export default {
                     @change="backSearch()" placeholder="bath" min="0" max="20">
             </div>
 
-            <!-- RANGE -->
-            <div class="container">
-                <input type="range" v-model="this.store.searchRange">
-            </div>
 
             <!-- button -->
+            <button class="input-group-text btn _btn-search" @click="backSearch()" v-if="isAdvanceSearch">Search</button>
+            <!-- button -->
+            <button class="input-group-text btn _btn-search" @click="search()" v-else>Search</button>
 
-            <button class="input-group-text btn _btn-search" @click="backSearch()">Search</button>
         </div>
         <!-- services -->
         <div class="bottom-side-search d-flex flex-wrap my-2" v-if="isAdvanceSearch">
             <div class="form-check _mycheckwrapper my-3" v-for=" service  in  this.services ">
-                <input class="form-check-input _mycheck" type="checkbox" :value="service.id" @click="backSearch()">
+                <input class="form-check-input _mycheck" type="checkbox" :value="service.id" @click="search()">
                 <div class="d-flex flex-column align-items-start _myiconwrapper">
                     <span class="h2 d-flex justify-content-center w-100">
                         <i :class="this.getIconsClass(service.icon)"></i>
@@ -373,6 +410,11 @@ export default {
             </div>
         </div>
 
+        <!-- RANGE -->
+        <div class="container d-flex justify-content-center align-items-center flex-column" v-if="isAdvanceSearch">
+            <input class="w-75" type="range" v-model="this.store.searchRange">
+            <span>Range: {{ this.store.searchRange }} km</span>
+        </div>
         <!-- Conversione coordinate-->
         <!-- <div>
             <input type="number" placeholder="latitudine" v-model="latitudine">

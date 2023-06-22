@@ -23,6 +23,7 @@ export const store = reactive({
     //search
     searchError: '',
     searchInput: '',
+    searchInputName: '',
     searchRange: 20,
-    arraySuggestion : [],
+    arraySuggestion: [],
 });
