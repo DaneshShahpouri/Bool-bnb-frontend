@@ -48,7 +48,9 @@ export default {
         setApartments() {
             this.store.indexApartments = []
             this.store.apartments.forEach(apartment => {
-                this.store.indexApartments.push(JSON.parse(JSON.stringify(apartment)))
+                if (apartment.isVisible == 1) {
+                    this.store.indexApartments.push(JSON.parse(JSON.stringify(apartment)))
+                }
             })
 
         },
