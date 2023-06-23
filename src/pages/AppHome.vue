@@ -2,6 +2,7 @@
 import axios from 'axios';
 import { store } from '../store.js';
 import AppSearch from '../components/AppSearch.vue';
+import ApartmentCard from '../components/ApartmentCard.vue';
 
 export default {
     name: 'AppHome',
@@ -15,7 +16,8 @@ export default {
     },
 
     components: {
-        AppSearch
+        AppSearch,
+        ApartmentCard,
     },
 
     methods: {
@@ -70,25 +72,7 @@ export default {
 <template>
     <AppSearch></AppSearch>
 
-    <!-- FORM RICERCA -->
-    <!-- <form class="container" @submit.prevent="getApartments()">
-
-        <div class="mb-3">
-            <label for="address" class="mb-2">Address Form*</label>
-            <input class="form-control my-label" type="text" name="address" id="address" v-model="this.store.searchInput">
-        </div>
-
-        <div>
-            <input type="range" id="radius" name="radius" min="0" max="100" v-model="this.radius">
-            <label for="radius">Radius</label>
-        </div>
-
-        <button type="submit" class="btn btn-primary">invia</button>
-
-    </form> -->
-    <!-- FORM RICERCA -->
-
-    <div class="container align-items-stretch mt-5" id="AppHome" v-if="this.store.searchError === ''">
+    <!-- <div class="container align-items-stretch mt-5" id="AppHome" v-if="this.store.searchError === ''">
         <div class="card _card" v-for="apartment in  this.store.indexApartments ">
             <div class="img-wrapper">
                 <img class="card-img-top"
@@ -108,35 +92,27 @@ export default {
     </div>
     <div class="alert alert-danger container" role="alert" v-else>
         {{ this.store.searchError }}
+    </div> -->
+
+    <div class="cards-container" v-if="this.store.searchError === ''">
+    
+        <apartmentCard v-for="apartment in this.store.indexApartments"  :apartment="apartment"></apartmentCard>
+        
     </div>
+    <div class="alert alert-danger container" role="alert" v-else>
+        {{ this.store.searchError }}
+    </div> 
 </template>
 
 <style lang="scss" scoped>
-#AppHome {
-    display: flex;
-    align-items: center;
-    gap: 1em;
-    flex-flow: row wrap;
+.cards-container{
+display: flex;
+flex-flow: row wrap;
+gap: 50px;
 
-    ._card {
-        width: calc((100% / 4) - 1em);
-        border: 1px solid lightgray;
-        border-radius: 20px;
-        padding: 1em;
+margin: 0 auto;
 
-        .img-wrapper {
-            height: 150px;
-
-            .card-img-top {
-                height: 100%;
-                width: 100%;
-                object-fit: cover;
-            }
-        }
-
-        .address {
-            font-size: .8em;
-        }
-    }
+width: 90%;
 }
+    
 </style>
