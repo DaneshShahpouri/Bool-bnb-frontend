@@ -111,6 +111,7 @@ flex-flow: row wrap;
 gap: 50px;
 
 margin: 0 auto;
+padding-bottom: 50px;
 
 width: 90%;
 }
