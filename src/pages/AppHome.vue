@@ -20,8 +20,8 @@ export default {
 
     methods: {
         getApartments() {
-            if (this.store.searchInput != '') {
-                axios.get('http://127.0.0.1:8000/api/apartments/' + this.store.searchInput).then(response => {
+            if (this.store.searchInputName != '') {
+                axios.get('http://127.0.0.1:8000/api/apartments/' + this.store.searchInputNAme).then(response => {
                     console.log(response)
                     this.store.apartments = []
                     response.data.results.forEach(apartment => {
@@ -48,9 +48,8 @@ export default {
         setApartments() {
             this.store.indexApartments = []
             this.store.apartments.forEach(apartment => {
-                if (apartment.isVisible == 1) {
-                    this.store.indexApartments.push(JSON.parse(JSON.stringify(apartment)))
-                }
+                this.store.indexApartments.push(JSON.parse(JSON.stringify(apartment)))
+
             })
 
         },

@@ -39,6 +39,54 @@ export default {
             })
         },
 
+        getApartments() {
+            //console.log('funziono')
+            if (this.store.searchInputName != ''
+                //&& this.store.searchInputName.length >= 3
+            ) {
+                axios.get('http://127.0.0.1:8000/api/apartments/' + encodeURIComponent(this.store.searchInputName)).then(response => {
+                    //console.log(response)
+                    this.store.apartments = []
+                    response.data.results.forEach(apartment => {
+                        this.store.apartments.push(JSON.parse(JSON.stringify(apartment)))
+                        // this.store.userName = response.data.user
+
+                    });
+                    if (response.data.results.length == 0) {
+                        this.store.searchError = 'Sorry. No matching items found.'
+                    } else {
+                        this.store.searchError = ''
+                    }
+                    this.setApartments()
+                    // console.log('nome diverso da niente')
+                })
+            } else {
+                axios.get(this.store.apiPath + 'apartments').then(response => {
+                    //console.log(response)
+                    this.store.apartments = []
+                    response.data.results.forEach(apartment => {
+                        this.store.apartments.push(JSON.parse(JSON.stringify(apartment)))
+                        // this.store.userName = response.data.user
+
+                    });
+                    if (response.data.results.length == 0) {
+                        this.store.searchError = 'Sorry. No matching items found.'
+                    } else {
+                        this.store.searchError = ''
+                    }
+                    this.setApartments()
+                    // console.log('nome uguale a niente')
+                })
+            }
+        },
+
+        setApartments() {
+            this.store.indexApartments = []
+            this.store.apartments.forEach(apartment => {
+                this.store.indexApartments.push(JSON.parse(JSON.stringify(apartment)))
+            })
+        },
+
         getIconsClass(string) {
             let stringMod = string.replaceAll('<i class="', '');
             let stringModTwi = stringMod.replaceAll('"></i>', '');
@@ -90,9 +138,6 @@ export default {
                 this.servicesCheck = []
             }
         },
-
-        //Logica FrontEnd (da togliere (Non ora))
-
 
         //Conversione lat-long-zoom (non usata)
         latLonConversion(lat, lon, zoomLevel) {
@@ -162,65 +207,63 @@ export default {
         //Logica Backend
         backSearch() {
             this.store.searchError = ''
-            if (true) {
-                //--debug--
-                //console.log('Ricerca backend')
-                //--debug--
 
-                this.servicesCheck = []
-                let servicesChecked = [];
-                servicesChecked = document.querySelectorAll('._mycheck')
-                servicesChecked.forEach(service => {
-                    if (service.checked) {
-                        this.servicesCheck.push(service.value)
-                    }
-                });
-                console.log(this.servicesCheck.toString().length)
-                let lastServices = this.servicesCheck.toString()
-
-                if (this.store.searchInput != '') {
-                    axios.get('https://api.tomtom.com/search/2/geocode/' + encodeURIComponent(this.store.searchInput) + '.json?countrySet=IT&key=8AyhtFuGo44d57QodNOzeOGIsIaJsEq5').then(res => {
-                        //console.log(res.data.results.length)
-                        //console.log('prima chiamata api')
-                        if (res.data.results.length > 0) {
-                            let city_lat = res.data.results[0].position.lat
-                            let city_lon = res.data.results[0].position.lon
-                            //console.log('prima chiamata api - superato controllo')
-
-                            axios.get('http://127.0.0.1:8000/api/apartments/getapartment/' + city_lat + '/' + city_lon + '/' + this.store.searchRange + '/' + (this.searchInputRooms == '' ? '0/' : this.searchInputRooms + '/') + (this.searchInputBeds == '' ? '0/' : this.searchInputBeds + '/') + (this.searchInputBathrooms == '' ? '0/' : this.searchInputBathrooms) + lastServices).then(resu => {
-                                //console.log('seconda chiamata api')
-                                //console.log('http://127.0.0.1:8000/api/apartments/getapartment/' + city_lat + '/' + city_lon + '/' + (this.searchInputRooms == '' ? '0/' : this.searchInputRooms + '/') + (this.searchInputBeds == '' ? '0/' : this.searchInputBeds + '/') + (this.searchInputBathrooms == '' ? '0/' : this.searchInputBathrooms) + '1')
-                                //console.log(res.data.results)
-                                //console.log('http://127.0.0.1:8000/api/getapartment/' + city_lat + '/' + city_lon + '/' + this.store.searchRange + '/' + this.searchInputRooms + '/' + this.searchInputBeds + '/' + this.searchInputBathrooms + '/' + '1')
-                                this.store.indexApartments = [];
-                                this.store.indexApartments = resu.data.results;
-                                //console.log(resu.data.results)
-                                if (resu.data.results.length == 0) {
-                                    this.store.searchError = 'Sorry. No matching items found.'
-                                }
-                            })
-                        }
-                    })
-                } else if (this.store.searchInput == '' && (this.searchInputRooms != '' || this.searchInputBeds != '' || this.searchInputBathrooms != '')) {
-                    axios.get('http://127.0.0.1:8000/api/apartmentempty/' + (this.searchInputRooms == '' ? '0/' : this.searchInputRooms + '/') + (this.searchInputBeds == '' ? '0/' : this.searchInputBeds + '/') + (this.searchInputBathrooms == '0/' ? '' : this.searchInputBathrooms) + lastServices).then(resul => {
-                        //console.log(res.data.results)
-                        this.store.indexApartments = [];
-                        this.store.indexApartments = resul.data.results;
-                        if (resul.data.results.length == 0) {
-                            this.store.searchError = 'Sorry. No matching items found.'
-                        }
-                    })
-                } else {
-                    axios.get('http://127.0.0.1:8000/api/apartments').then(result => {
-                        this.store.indexApartments = [];
-                        this.store.indexApartments = result.data.results;
-                        if (result.data.results.length == 0) {
-                            this.store.searchError = 'Sorry. No matching items found.'
-                        }
-                    })
+            //services
+            this.servicesCheck = []
+            let servicesChecked = [];
+            servicesChecked = document.querySelectorAll('._mycheck')
+            servicesChecked.forEach(service => {
+                if (service.checked) {
+                    this.servicesCheck.push(service.value)
                 }
+            });
+            let lastServices = this.servicesCheck.toString()
 
+            //console.log(this.servicesCheck.toString().length)
+
+            if (this.store.searchInput != '') {
+                axios.get('https://api.tomtom.com/search/2/geocode/' + encodeURIComponent(this.store.searchInput) + '.json?countrySet=IT&key=8AyhtFuGo44d57QodNOzeOGIsIaJsEq5').then(res => {
+                    //console.log(res.data.results.length)
+                    //console.log('prima chiamata api')
+                    if (res.data.results.length > 0) {
+                        let city_lat = res.data.results[0].position.lat
+                        let city_lon = res.data.results[0].position.lon
+                        //console.log('prima chiamata api - superato controllo')
+
+                        axios.get('http://127.0.0.1:8000/api/apartments/getapartment/' + city_lat + '/' + city_lon + '/' + this.store.searchRange + '/' + (this.searchInputRooms == '' ? '0/' : this.searchInputRooms + '/') + (this.searchInputBeds == '' ? '0/' : this.searchInputBeds + '/') + (this.searchInputBathrooms == '' ? '0/' : this.searchInputBathrooms) + lastServices).then(resu => {
+                            //console.log('seconda chiamata api')
+                            //console.log('http://127.0.0.1:8000/api/apartments/getapartment/' + city_lat + '/' + city_lon + '/' + (this.searchInputRooms == '' ? '0/' : this.searchInputRooms + '/') + (this.searchInputBeds == '' ? '0/' : this.searchInputBeds + '/') + (this.searchInputBathrooms == '' ? '0/' : this.searchInputBathrooms) + '1')
+                            //console.log(res.data.results)
+                            //console.log('http://127.0.0.1:8000/api/getapartment/' + city_lat + '/' + city_lon + '/' + this.store.searchRange + '/' + this.searchInputRooms + '/' + this.searchInputBeds + '/' + this.searchInputBathrooms + '/' + '1')
+                            this.store.indexApartments = [];
+                            this.store.indexApartments = resu.data.results;
+                            //console.log(resu.data.results)
+                            if (resu.data.results.length == 0) {
+                                this.store.searchError = 'Sorry. No matching items found.'
+                            }
+                        })
+                    }
+                })
+            } else if (this.store.searchInput == '' && (this.searchInputRooms != '' || this.searchInputBeds != '' || this.searchInputBathrooms != '' || lastServices.length != 0)) {
+                axios.get('http://127.0.0.1:8000/api/apartmentempty/' + (this.searchInputRooms == '' ? '0/' : this.searchInputRooms + '/') + (this.searchInputBeds == '' ? '0/' : this.searchInputBeds + '/') + (this.searchInputBathrooms == '0/' ? '' : this.searchInputBathrooms) + lastServices).then(resul => {
+                    //console.log(res.data.results)
+                    this.store.indexApartments = [];
+                    this.store.indexApartments = resul.data.results;
+                    if (resul.data.results.length == 0) {
+                        this.store.searchError = 'Sorry. No matching items found.'
+                    }
+                })
+            } else {
+                axios.get('http://127.0.0.1:8000/api/apartments').then(result => {
+                    this.store.indexApartments = [];
+                    this.store.indexApartments = result.data.results;
+                    if (result.data.results.length == 0) {
+                        this.store.searchError = 'Sorry. No matching items found.'
+                    }
+                })
             }
+
+
 
             this.setIsSearch()
         },
@@ -312,7 +355,7 @@ export default {
                 v-if="isAdvanceSearch">
             <!-- input di ricerca name -->
             <input type="text" aria-label="search" class="form-control _search" v-model="this.store.searchInputName"
-                @input="search()" placeholder="Search by name" v-else>
+                @input="getApartments()" placeholder="Search by name" v-else>
 
             <div class="_menu-suggerimenti "
                 v-show="this.store.searchInput != '' && this.store.arraySuggestion.length != 0 && this.store.searchInput.length > 3 && this.isSuggest == true">
@@ -346,13 +389,13 @@ export default {
             <!-- button -->
             <button class="input-group-text btn _btn-search" @click="backSearch()" v-if="isAdvanceSearch">Search</button>
             <!-- button -->
-            <button class="input-group-text btn _btn-search" @click="search()" v-else>Search</button>
+            <button class="input-group-text btn _btn-search" @click="getApartments()" v-else>Search</button>
 
         </div>
         <!-- services -->
         <div class="bottom-side-search d-flex flex-wrap my-2" v-if="isAdvanceSearch">
             <div class="form-check _mycheckwrapper my-3" v-for=" service  in  this.services ">
-                <input class="form-check-input _mycheck" type="checkbox" :value="service.id">
+                <input class="form-check-input _mycheck" type="checkbox" :value="service.id" @click="backSearch()">
                 <div class="d-flex flex-column align-items-start _myiconwrapper">
                     <span class="h2 d-flex justify-content-center w-100">
                         <i :class="this.getIconsClass(service.icon)"></i>
@@ -376,7 +419,7 @@ export default {
             </div>
             <!-- SLIDEBAR - PERSONALIZZATA -->
 
-            <input class="w-75 _slider" type="range" v-model="this.store.searchRange">
+            <input class="w-75 _slider" type="range" v-model="this.store.searchRange" @change="backSearch()">
             <span class="_slider-text">Range:
                 <strong>
                     {{ this.store.searchRange }}
