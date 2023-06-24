@@ -95,8 +95,9 @@ export default {
     </div> -->
 
     <div class="cards-container" v-if="this.store.searchError === ''">
-    
-        <apartmentCard v-for="apartment in this.store.indexApartments"  :apartment="apartment"></apartmentCard>
+        
+            <apartmentCard v-for="apartment in this.store.indexApartments"  :apartment="apartment"></apartmentCard>
+        
         
     </div>
     <div class="alert alert-danger container" role="alert" v-else>

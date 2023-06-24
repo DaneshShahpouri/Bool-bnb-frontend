@@ -19,20 +19,20 @@ export default {
 }
 </script>
 <template>
-
-    <div class="_card" @mouseover="viewBtn = true" @mouseleave="viewBtn = false">
-      <img :src="(apartment.cover_image != null && (apartment.cover_image.slice(apartment.cover_image.length - 3, apartment.cover_image.length) == 'png' || apartment.cover_image.slice(apartment.cover_image.length - 3, apartment.cover_image.length) == 'jpg' || apartment.cover_image.slice(apartment.cover_image.length - 3, apartment.cover_image.length) == 'ebp' || apartment.cover_image.slice(apartment.cover_image.length - 3, apartment.cover_image.length) == 'peg') ? (this.store.urlImg + apartment.cover_image) : 'https://www.svaghiamo.it/wp-content/uploads/2016/09/image-not-found-4a963b95bf081c3ea02923dceaeb3f8085e1a654fc54840aac61a57a60903fef.png')" class="card-img-top" alt="apartment-image">
-      <div class="_card-body">
-        <h5 class="name">{{ apartment.name }}</h5>
-        <div class="address">{{ apartment.address }}</div>
-        <div class="price"> <strong>154&euro;</strong> notte</div>
-
-        <div class="like">
-            <i class="fa-regular fa-heart"></i>
+    <router-link :to="{ name: 'apartments/show', params: { slug: apartment.slug } }" class="_card">
+        <div  @mouseover="viewBtn = true" @mouseleave="viewBtn = false">
+          <img :src="(apartment.cover_image != null && (apartment.cover_image.slice(apartment.cover_image.length - 3, apartment.cover_image.length) == 'png' || apartment.cover_image.slice(apartment.cover_image.length - 3, apartment.cover_image.length) == 'jpg' || apartment.cover_image.slice(apartment.cover_image.length - 3, apartment.cover_image.length) == 'ebp' || apartment.cover_image.slice(apartment.cover_image.length - 3, apartment.cover_image.length) == 'peg') ? (this.store.urlImg + apartment.cover_image) : 'https://www.svaghiamo.it/wp-content/uploads/2016/09/image-not-found-4a963b95bf081c3ea02923dceaeb3f8085e1a654fc54840aac61a57a60903fef.png')" class="card-img-top" alt="apartment-image">
+          <div class="_card-body">
+            <h5 class="name">{{ apartment.name }}</h5>
+            <div class="address">{{ apartment.address }}</div>
+            <div class="price"> <strong>154&euro;</strong> notte</div>
+    
+            <div class="like">
+                <i class="fa-regular fa-heart"></i>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-
+    </router-link>
 </template>
 
 <style lang="scss" scoped>
@@ -41,8 +41,10 @@ export default {
   width: calc(100% / 3 - 50px / 4 * 3);
   height: 400px;
 
-  
-  
+  text-decoration: none;
+
+  color: unset;
+
   transition: all .2s ease-in-out;
   
   img{
