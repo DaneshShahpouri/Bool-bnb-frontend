@@ -9,6 +9,7 @@ export default {
         return {
             store,
             isAdvanceSearch: false,
+            isAdvanceSearchAnimation: false,
             isSearch: false,
             isSuggest: true,
             searchInputRooms: '',
@@ -16,6 +17,7 @@ export default {
             searchInputBathrooms: '',
             timeoutIsSearch: '',
             servicesCheck: [],
+            errorTimeout: '',
             //-------------
             services: [],
             latitudine: "",
@@ -23,34 +25,26 @@ export default {
             zoom: "",
             tempServices: [],
             searchInput: '',
-
-
         }
     },
 
     methods: {
+        //mette i servizi in un array
         getServices() {
             axios.get(this.store.apiPath + 'services').then(response => {
-
                 response.data.results.forEach(service => {
                     this.services.push(service)
                 });
-                //console.log(this.services)
             })
         },
 
+        //Ricerca base per nome
         getApartments() {
-            //console.log('funziono')
-            if (this.store.searchInputName != ''
-                //&& this.store.searchInputName.length >= 3
-            ) {
+            if (this.store.searchInputName != '') {
                 axios.get('http://127.0.0.1:8000/api/apartments/' + encodeURIComponent(this.store.searchInputName)).then(response => {
-                    //console.log(response)
                     this.store.apartments = []
                     response.data.results.forEach(apartment => {
                         this.store.apartments.push(JSON.parse(JSON.stringify(apartment)))
-                        // this.store.userName = response.data.user
-
                     });
                     if (response.data.results.length == 0) {
                         this.store.searchError = 'Sorry. No matching items found.'
@@ -58,16 +52,13 @@ export default {
                         this.store.searchError = ''
                     }
                     this.setApartments()
-                    // console.log('nome diverso da niente')
+
                 })
             } else {
                 axios.get(this.store.apiPath + 'apartments').then(response => {
-                    //console.log(response)
                     this.store.apartments = []
                     response.data.results.forEach(apartment => {
                         this.store.apartments.push(JSON.parse(JSON.stringify(apartment)))
-                        // this.store.userName = response.data.user
-
                     });
                     if (response.data.results.length == 0) {
                         this.store.searchError = 'Sorry. No matching items found.'
@@ -75,11 +66,11 @@ export default {
                         this.store.searchError = ''
                     }
                     this.setApartments()
-                    // console.log('nome uguale a niente')
                 })
             }
         },
 
+        //copia i dati di apartment aray in index apartment (ridondante, ma necessaria per come è scritto il codice)
         setApartments() {
             this.store.indexApartments = []
             this.store.apartments.forEach(apartment => {
@@ -87,6 +78,7 @@ export default {
             })
         },
 
+        //per avere solo le classi delle icone del database
         getIconsClass(string) {
             let stringMod = string.replaceAll('<i class="', '');
             let stringModTwi = stringMod.replaceAll('"></i>', '');
@@ -100,9 +92,13 @@ export default {
             });
         },
 
+        //cambia il booleano che regola la ricerca avanzata e azzera i parametri
         searchBool() {
             if (this.isAdvanceSearch) {
-                this.isAdvanceSearch = false
+                setTimeout(() => {
+                    this.isAdvanceSearch = false
+                }, 1000)
+                this.isAdvanceSearchAnimation = true
                 //azzeramento variabili
                 this.store.searchError = ''
                 this.store.indexApartments = this.store.apartments
@@ -110,6 +106,7 @@ export default {
                 this.searchInputRooms = ''
                 this.searchInputBeds = ''
                 this.searchInputBathrooms = ''
+                this.store.searchInputName = ''
 
                 this.isSearch = false
                 this.isSuggest = false
@@ -120,7 +117,9 @@ export default {
                 this.servicesCheck = []
             } else {
                 this.isAdvanceSearch = true
+                this.isAdvanceSearchAnimation = false
                 //azzeramento variabili
+                this.store.searchInputName = ''
                 this.store.searchError = ''
                 this.store.searchInput = ''
                 this.store.indexApartments = this.store.apartments
@@ -137,74 +136,11 @@ export default {
                 this.timeoutIsSearch = ''
                 this.servicesCheck = []
             }
+
+            this.getApartments()
         },
 
-        //Conversione lat-long-zoom (non usata)
-        latLonConversion(lat, lon, zoomLevel) {
-            const MIN_ZOOM_LEVEL = 0
-            const MAX_ZOOM_LEVEL = 22
-            const MIN_LAT = -85.051128779807
-            const MAX_LAT = 85.051128779806
-            const MIN_LON = -180.0
-            const MAX_LON = 180.0
-
-            if (
-                zoomLevel == undefined ||
-                isNaN(zoomLevel) ||
-                zoomLevel < MIN_ZOOM_LEVEL ||
-                zoomLevel > MAX_ZOOM_LEVEL
-            ) {
-                throw new Error(
-                    "Zoom level value is out of range [" +
-                    MIN_ZOOM_LEVEL.toString() +
-                    ", " +
-                    MAX_ZOOM_LEVEL.toString() +
-                    "]"
-                )
-            }
-
-            if (lat == undefined || isNaN(lat) || lat < MIN_LAT || lat > MAX_LAT) {
-                throw new Error(
-                    "Latitude value is out of range [" +
-                    MIN_LAT.toString() +
-                    ", " +
-                    MAX_LAT.toString() +
-                    "]"
-                )
-            }
-
-            if (lon == undefined || isNaN(lon) || lon < MIN_LON || lon > MAX_LON) {
-                throw new Error(
-                    "Longitude value is out of range [" +
-                    MIN_LON.toString() +
-                    ", " +
-                    MAX_LON.toString() +
-                    "]"
-                )
-            }
-
-            let z = Math.trunc(zoomLevel)
-            let xyTilesCount = Math.pow(2, z)
-            let x = Math.trunc(Math.floor(((lon + 180.0) / 360.0) * xyTilesCount))
-            let y = Math.trunc(
-                Math.floor(
-                    ((1.0 -
-                        Math.log(
-                            Math.tan((lat * Math.PI) / 180.0) +
-                            1.0 / Math.cos((lat * Math.PI) / 180.0)
-                        ) /
-                        Math.PI) /
-                        2.0) *
-                    xyTilesCount
-                )
-            )
-
-            //console.log(z.toString() + "/" + x.toString() + "/" + y.toString());
-
-            return z.toString() + "/" + x.toString() + "/" + y.toString()
-        },
-
-        //Logica Backend
+        //Logica Backend per la ricerca
         backSearch() {
             this.store.searchError = ''
 
@@ -219,57 +155,60 @@ export default {
             });
             let lastServices = this.servicesCheck.toString()
 
-            //console.log(this.servicesCheck.toString().length)
-
             if (this.store.searchInput != '') {
                 axios.get('https://api.tomtom.com/search/2/geocode/' + encodeURIComponent(this.store.searchInput) + '.json?countrySet=IT&key=8AyhtFuGo44d57QodNOzeOGIsIaJsEq5').then(res => {
-                    //console.log(res.data.results.length)
-                    //console.log('prima chiamata api')
                     if (res.data.results.length > 0) {
                         let city_lat = res.data.results[0].position.lat
                         let city_lon = res.data.results[0].position.lon
-                        //console.log('prima chiamata api - superato controllo')
 
                         axios.get('http://127.0.0.1:8000/api/apartments/getapartment/' + city_lat + '/' + city_lon + '/' + this.store.searchRange + '/' + (this.searchInputRooms == '' ? '0/' : this.searchInputRooms + '/') + (this.searchInputBeds == '' ? '0/' : this.searchInputBeds + '/') + (this.searchInputBathrooms == '' ? '0/' : this.searchInputBathrooms) + lastServices).then(resu => {
-                            //console.log('seconda chiamata api')
-                            //console.log('http://127.0.0.1:8000/api/apartments/getapartment/' + city_lat + '/' + city_lon + '/' + (this.searchInputRooms == '' ? '0/' : this.searchInputRooms + '/') + (this.searchInputBeds == '' ? '0/' : this.searchInputBeds + '/') + (this.searchInputBathrooms == '' ? '0/' : this.searchInputBathrooms) + '1')
-                            //console.log(res.data.results)
-                            //console.log('http://127.0.0.1:8000/api/getapartment/' + city_lat + '/' + city_lon + '/' + this.store.searchRange + '/' + this.searchInputRooms + '/' + this.searchInputBeds + '/' + this.searchInputBathrooms + '/' + '1')
                             this.store.indexApartments = [];
-                            this.store.indexApartments = resu.data.results;
-                            //console.log(resu.data.results)
                             if (resu.data.results.length == 0) {
                                 this.store.searchError = 'Sorry. No matching items found.'
+                            } else {
+                                this.store.indexApartments = resu.data.results;
+
+                            }
+                            if (this.store.indexApartments.length != 0) {
+                                clearTimeout(this.errorTimeout);
+                                this.store.searchError = ''
+                            } else {
+                                this.errorTimeout = setTimeout(() => {
+                                    this.store.searchError = 'Sorry. No matching items found.'
+
+                                }, 2000);
                             }
                         })
                     }
                 })
+
             } else if (this.store.searchInput == '' && (this.searchInputRooms != '' || this.searchInputBeds != '' || this.searchInputBathrooms != '' || lastServices.length != 0)) {
                 axios.get('http://127.0.0.1:8000/api/apartmentempty/' + (this.searchInputRooms == '' ? '0/' : this.searchInputRooms + '/') + (this.searchInputBeds == '' ? '0/' : this.searchInputBeds + '/') + (this.searchInputBathrooms == '' ? '0/' : this.searchInputBathrooms) + lastServices).then(resul => {
                     //console.log(res.data.results)
                     console.log('http://127.0.0.1:8000/api/apartmentempty/' + (this.searchInputRooms == '' ? '0/' : this.searchInputRooms + '/') + (this.searchInputBeds == '' ? '0/' : this.searchInputBeds + '/') + (this.searchInputBathrooms == '0/' ? '' : this.searchInputBathrooms) + lastServices)
                     this.store.indexApartments = [];
-                    this.store.indexApartments = resul.data.results;
                     if (resul.data.results.length == 0) {
                         this.store.searchError = 'Sorry. No matching items found.'
+                    } else {
+                        this.store.indexApartments = resul.data.results;
+
                     }
+
                 })
             } else {
                 axios.get('http://127.0.0.1:8000/api/apartments').then(result => {
                     this.store.indexApartments = [];
-                    this.store.indexApartments = result.data.results;
                     if (result.data.results.length == 0) {
                         this.store.searchError = 'Sorry. No matching items found.'
+                    } else {
+                        this.store.indexApartments = result.data.results;
                     }
+
                 })
             }
-
-
-
-            this.setIsSearch()
         },
 
-        //riduce il numero di chiamate axios (non usata... credo)
+        //riduce il numero di chiamate axios (usata dall'input delle città)
         setIsSearch() {
             if (this.isSearch == false) {
                 this.isSearch = true
@@ -286,11 +225,8 @@ export default {
         //click sul consiglio per cambiare nome della citta
         setInput(parametro) {
             this.store.searchInput = parametro
-            this.setIsSearch()
+
             this.backSearch()
-            if (this.store.indexApartments.length == 0) {
-                this.store.searchError = 'Sorry. No matching items found.'
-            }
             this.isSuggest = false;
 
         },
@@ -346,10 +282,11 @@ export default {
 }
 </script>
 <template>
-    <div id="appSearch" class="">
+    <div id="appSearch">
 
         <div class="input-group my-3">
-            <button class="input-group-text btn _btn-search" @click="searchBool()">Advance Search</button>
+            <button class="input-group-text btn" :class="this.isAdvanceSearch ? '_btn-search' : '_btn-unsearch'"
+                @click="searchBool()">Advance Search</button>
             <!-- input di ricerca city -->
             <input type="text" aria-label="search" class="form-control _search" v-model="this.store.searchInput"
                 @input="advicedCity(), backSearch(), setIsSearch()" placeholder="Search by city or address"
@@ -358,43 +295,48 @@ export default {
             <input type="text" aria-label="search" class="form-control _search" v-model="this.store.searchInputName"
                 @input="getApartments()" placeholder="Search by name" v-else>
 
+            <!-- suggerimenti Indirizzi -->
             <div class="_menu-suggerimenti "
-                v-show="this.store.searchInput != '' && this.store.arraySuggestion.length != 0 && this.store.searchInput.length > 3 && this.isSuggest == true">
+                v-if="this.store.searchInput != '' && this.store.arraySuggestion.length != 0 && this.store.searchInput.length > 3 && this.isSuggest === true">
                 <ul>
                     <li v-for=" element  in  this.store.arraySuggestion "
-                        @click="setInput(element.address.freeformAddress)">{{
-                            element.address.freeformAddress }}</li>
+                        @click="setInput(element.address.freeformAddress)"><i class="fa-solid fa-location-dot _location-icon"></i> {{
+                                element.address.freeformAddress }}</li>
                 </ul>
             </div>
 
             <!-- Rooms -->
-            <div class="_numb-imput-wrapper" v-if="isAdvanceSearch">
+            <div class="_numb-imput-wrapper" :class="this.isAdvanceSearchAnimation ? 'numb-input-disappear' : ''"
+                v-if="isAdvanceSearch">
                 <i class="fa-solid fa-door-closed"></i>
                 <input type="number" class="_numb-imput" aria-label="rooms" v-model="searchInputRooms"
                     @change="backSearch()" placeholder="rooms" min="0" max="30">
             </div>
             <!-- beds -->
-            <div class="_numb-imput-wrapper" v-if="isAdvanceSearch">
+            <div class="_numb-imput-wrapper" :class="this.isAdvanceSearchAnimation ? 'numb-input-disappear' : ''"
+                v-if="isAdvanceSearch">
                 <i class="fa-solid fa-bed"></i>
                 <input class="_numb-imput" type="number" aria-label="beds" v-model="searchInputBeds" @change="backSearch()"
                     placeholder="beds" min="0" max="60">
             </div>
             <!-- bathrooms -->
-            <div class="_numb-imput-wrapper" v-if="isAdvanceSearch">
+            <div class="_numb-imput-wrapper" :class="this.isAdvanceSearchAnimation ? 'numb-input-disappear' : ''"
+                v-if="isAdvanceSearch">
                 <i class="fa-solid fa-bath"></i>
                 <input class="_numb-imput" type="number" aria-label="bathrooms" v-model="searchInputBathrooms"
                     @change="backSearch()" placeholder="bath" min="0" max="20">
             </div>
 
 
-            <!-- button -->
+            <!-- button - Ricerca avanzata -->
             <button class="input-group-text btn _btn-search" @click="backSearch()" v-if="isAdvanceSearch">Search</button>
-            <!-- button -->
+            <!-- button - Ricerca per nome -->
             <button class="input-group-text btn _btn-search" @click="getApartments()" v-else>Search</button>
 
         </div>
         <!-- services -->
-        <div class="bottom-side-search d-flex flex-wrap my-2" v-if="isAdvanceSearch">
+        <div class="bottom-side-search d-flex flex-wrap my-2"
+            :class="this.isAdvanceSearchAnimation ? 'services-disappear' : ''" v-if="isAdvanceSearch">
             <div class="form-check _mycheckwrapper my-3" v-for=" service  in  this.services ">
                 <input class="form-check-input _mycheck" type="checkbox" :value="service.id" @click="backSearch()">
                 <div class="d-flex flex-column align-items-start _myiconwrapper">
@@ -407,9 +349,10 @@ export default {
         </div>
 
         <!-- RANGE -->
-        <div class=" _range container d-flex justify-content-center align-items-center flex-column" v-if="isAdvanceSearch">
+        <div class=" _range container d-flex justify-content-center align-items-center flex-column" v-if="isAdvanceSearch"
+            :class="this.isAdvanceSearchAnimation ? 'range-disappear' : ''">
             <!-- SLIDEBAR - PERSONALIZZATA -->
-            <div class="slider-colored">
+            <div class="slider-colored" :class="this.isAdvanceSearchAnimation ? 'slider-colored-disappear' : ''">
                 <div class="_slider-bar"
                     :style="'width: calc(' + this.store.searchRange + '% + ' + (100 - this.store.searchRange) / 25 + 'px);'">
                 </div>
@@ -427,14 +370,6 @@ export default {
                 </strong>
                 km</span>
         </div>
-        <!-- Conversione coordinate-->
-        <!-- <div>
-            <input type="number" placeholder="latitudine" v-model="latitudine">
-            <input type="number" placeholder="longitudine" v-model="longitudine">
-            <input type="number" placeholder="zoom" v-model="zoom">
-            <button type="submit" @click="latLonConversion(latitudine,longitudine,zoom)">converti</button>
-        </div> -->
-        <!-- /Conversione coordinate-->
 
     </div>
 </template>
@@ -449,9 +384,9 @@ export default {
     margin-bottom: 5em;
     position: relative;
 }
-
 ._range {
     margin-top: 2em;
+
 
     .slider-colored {
         position: relative;
@@ -502,6 +437,7 @@ export default {
         position: relative;
         z-index: 4;
         opacity: 0;
+        cursor: pointer;
 
         &::-webkit-slider-runnable-track {
             background-color: none;
@@ -525,6 +461,7 @@ export default {
 
 }
 
+
 ._menu-suggerimenti {
     position: absolute;
     top: 38px;
@@ -546,9 +483,19 @@ export default {
             background: white;
             padding: .5em;
 
+            ._location-icon {
+                margin-right: .5em;
+                font-size: .8em;
+                color: rgb(180, 180, 180);
+            }
+
             &:hover {
                 background: rgb(255, 90, 95);
                 color: white;
+
+                ._location-icon {
+                    color: rgb(254, 254, 254);
+                }
             }
         }
     }
@@ -582,11 +529,22 @@ export default {
     background: rgb(255, 90, 95);
     color: white;
     transition: all .5s;
+    border: 1px solid transparent;
 
     &:hover {
         box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.368);
     }
+}
 
+._btn-unsearch {
+    background: rgb(255, 255, 255);
+    color: rgb(255, 90, 95);
+    border: 1px solid rgb(255, 90, 95);
+    transition: all .5s;
+
+    &:hover {
+        box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.368);
+    }
 }
 
 // SERVICES
@@ -594,6 +552,8 @@ export default {
     // border-bottom: 1px solid lightgray;
     // border-top: 1px solid lightgray;
     padding-top: 2em;
+    height: 220px;
+    overflow: hidden;
 
     ._mycheckwrapper {
         width: calc(100% / 6);

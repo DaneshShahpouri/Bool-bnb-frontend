@@ -1,0 +1,226 @@
+    //Elementi con Animazione
+    //servizi nella ricerca
+
+    @media screen and (min-width: 700px) {
+
+
+        .bottom-side-search {
+            animation: .5s service-animation-appear;
+        }
+
+        .services-disappear {
+            animation: 1.1s service-animation-disappear;
+        }
+
+        //numero di stanze letti e bagni nella ricerca
+        ._numb-imput-wrapper {
+            animation: .5s smooth-appear;
+        }
+
+        .numb-input-disappear {
+            animation: 1.1s smooth-disappear
+        }
+
+        //range
+        .slider-colored {
+            animation: 1s slider-range-appear;
+        }
+
+        .slider-colored-disappear {
+            animation: 1.1s slider-range-disappear;
+        }
+
+        ._range {
+            animation: 1s range-appear;
+        }
+
+        .range-disappear {
+            animation: 1.1s range-disappear;
+        }
+
+        //input search
+        ._search {
+            animation: .7s search-appear;
+        }
+
+    }
+
+
+
+
+    //Animazioni
+    //servizi nella ricerca
+    @keyframes service-animation-appear {
+        0% {
+            height: 0px;
+            opacity: 0;
+            padding-top: 0em;
+        }
+
+        100% {
+            height: 220px;
+            opacity: 1;
+            padding-top: 2em;
+        }
+
+    }
+
+    @keyframes service-animation-disappear {
+        0% {
+            height: 220px;
+            opacity: 1;
+            padding-top: 2em;
+            margin-top: .5em;
+        }
+
+        25% {
+            height: 220px;
+        }
+
+        50% {
+
+            opacity: 1;
+            padding-top: 2em;
+            margin-top: .5em;
+        }
+
+        90% {
+            height: 0px;
+            opacity: 0;
+            padding-top: 0em;
+            margin-top: 0em;
+        }
+
+        100% {
+            height: 0px;
+            opacity: 0;
+            margin-top: 0em;
+            padding-top: 0em;
+            margin-top: 0em;
+        }
+    }
+
+    //numero di stanze letti e bagni nella ricerca
+    @keyframes smooth-appear {
+        0% {
+            width: 0px;
+            opacity: 0;
+        }
+
+        100% {
+            opacity: 1;
+            width: 93px;
+        }
+
+    }
+
+    @keyframes smooth-disappear {
+        0% {
+            opacity: 1;
+            width: 93px;
+        }
+
+        50% {
+            opacity: 0;
+            width: 0px;
+        }
+
+        100% {
+            opacity: 0;
+            width: 0px;
+        }
+
+    }
+
+    //range
+    @keyframes slider-range-appear {
+        0% {
+            width: 0%;
+            opacity: 0;
+        }
+
+        50% {
+            width: 0%;
+            opacity: 0;
+        }
+
+        100% {
+            opacity: 1;
+            width: 75%;
+        }
+
+    }
+
+    @keyframes slider-range-disappear {
+        0% {
+            opacity: 1;
+            width: 75%;
+            ;
+        }
+
+        50% {
+            width: 0%;
+            opacity: 0;
+        }
+
+        100% {
+            width: 0%;
+            opacity: 0;
+        }
+
+    }
+
+    @keyframes range-appear {
+        0% {
+            height: 0px;
+            opacity: 0;
+            overflow: hidden;
+            margin-top: 0em;
+        }
+
+
+        100% {
+            opacity: 1;
+            height: 53px;
+            overflow: hidden;
+            margin-top: 2em;
+        }
+
+
+    }
+
+    @keyframes range-disappear {
+        0% {
+            opacity: 1;
+            height: 53px;
+            overflow: hidden;
+            margin-top: 2em;
+
+        }
+
+        50% {
+            height: 0px;
+            opacity: 0;
+            margin-top: 0em;
+        }
+
+        100% {
+            height: 0px;
+            opacity: 0;
+            overflow: hidden;
+            margin-top: 0em;
+        }
+
+    }
+
+    //search
+
+    @keyframes search-appear {
+        0% {
+            opacity: 0%;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }

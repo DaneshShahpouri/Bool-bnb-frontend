@@ -23,8 +23,8 @@ export default {
     methods: {
         getApartments() {
             if (this.store.searchInputName != '') {
-                axios.get('http://127.0.0.1:8000/api/apartments/' + this.store.searchInputNAme).then(response => {
-                    console.log(response)
+                axios.get('http://127.0.0.1:8000/api/apartments/' + this.store.searchInputName).then(response => {
+                    //console.log(response)
                     this.store.apartments = []
                     response.data.results.forEach(apartment => {
                         this.store.apartments.push(JSON.parse(JSON.stringify(apartment)))
@@ -93,27 +93,36 @@ export default {
     <div class="alert alert-danger container" role="alert" v-else>
         {{ this.store.searchError }}
     </div> -->
-
-    <div class="cards-container" v-if="this.store.searchError === ''">
-    
-        <apartmentCard v-for="apartment in this.store.indexApartments"  :apartment="apartment"></apartmentCard>
-        
+    <div class="loading w-100 h-100 d-flex justify-content-center align-items-center"
+        v-if="this.store.searchError === '' && this.store.indexApartments.length == 0">
+        <div class="spinner-border text-danger" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <span>{{ this.store.searchError }}</span>
     </div>
-    <div class="alert alert-danger container" role="alert" v-else>
-        {{ this.store.searchError }}
-    </div> 
+    <div class="result" v-else>
+
+        <div class="cards-container" v-if="this.store.searchError === ''">
+            
+                <apartmentCard v-for="apartment in this.store.indexApartments" :apartment="apartment"></apartmentCard>
+            
+
+        </div>
+        <div class="alert alert-danger container" role="alert" v-else>
+            {{ this.store.searchError }}
+        </div>
+    </div>
 </template>
 
 <style lang="scss" scoped>
-.cards-container{
-display: flex;
-flex-flow: row wrap;
-gap: 50px;
+.cards-container {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 50px;
 
-margin: 0 auto;
-padding-bottom: 50px;
+    margin: 0 auto;
+    padding-bottom: 50px;
 
-width: 90%;
+    width: 90%;
 }
-    
 </style>
