@@ -21,7 +21,7 @@ export default {
 <template>
     <router-link :to="{ name: 'apartments/show', params: { slug: apartment.slug } }" class="_card">
         <div  @mouseover="viewBtn = true" @mouseleave="viewBtn = false">
-          <img :src="(apartment.cover_image != null && (apartment.cover_image.slice(apartment.cover_image.length - 3, apartment.cover_image.length) == 'png' || apartment.cover_image.slice(apartment.cover_image.length - 3, apartment.cover_image.length) == 'jpg' || apartment.cover_image.slice(apartment.cover_image.length - 3, apartment.cover_image.length) == 'ebp' || apartment.cover_image.slice(apartment.cover_image.length - 3, apartment.cover_image.length) == 'peg') ? (this.store.urlImg + apartment.cover_image) : 'https://www.svaghiamo.it/wp-content/uploads/2016/09/image-not-found-4a963b95bf081c3ea02923dceaeb3f8085e1a654fc54840aac61a57a60903fef.png')" class="card-img-top" alt="apartment-image">
+          <img :src="(apartment.cover_image != null && (apartment.cover_image.slice(apartment.cover_image.length - 3, apartment.cover_image.length) == 'png' || apartment.cover_image.slice(apartment.cover_image.length - 3, apartment.cover_image.length) == 'jpg' || apartment.cover_image.slice(apartment.cover_image.length - 3, apartment.cover_image.length) == 'ebp' || apartment.cover_image.slice(apartment.cover_image.length - 3, apartment.cover_image.length) == 'peg') ? (this.store.urlImg + apartment.cover_image) : 'https://www.svaghiamo.it/wp-content/uploads/2016/09/image-not-found-4a963b95bf081c3ea02923dceaeb3f8085e1a654fc54840aac61a57a60903fef.png')" alt="apartment-image">
           <div class="_card-body">
             <h5 class="name">{{ apartment.name }}</h5>
             <div class="address">{{ apartment.address }}</div>
@@ -45,17 +45,16 @@ export default {
   color: unset;
 
   transition: all .2s ease-in-out;
-  
+
   img{
-      height: 75%;
+      width: 100%;
+      height: 320px;
 
+      border-radius: 20px;
 
-  transition: all .2s ease-in-out;
+      object-fit: cover;
 
-  img {
-    height: 75%;
-
-    border-radius: 20px;
+      
   }
 
   ._card-body {
@@ -93,26 +92,11 @@ export default {
 
   }
 
-  .btn-container {
-    position: relative;
-
-    display: flex;
-    justify-content: flex-end;
-
-    width: 100%;
-  }
-
   &:hover {
     transform: scale(1.035);
 
     z-index: 3;
   }
+}
 
-  &:hover .btn-container {
-    position: absolute;
-    bottom: 0px;
-    right: 0px;
-  }
-}
-}
 </style>
