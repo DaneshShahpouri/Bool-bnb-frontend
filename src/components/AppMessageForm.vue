@@ -75,7 +75,7 @@ export default {
             <!-- username -->
             <div class="mb3 ">
                 <label class="mx-3" for="username">username</label>
-                <input type="text" name="username" id="username" class="form-control my-label"
+                <input type="text" name="username" id="username" minlength="3" maxlength="100" class="form-control my-label"
                     v-model="this.store.message_username" required>
             </div>
 
@@ -83,14 +83,14 @@ export default {
             <div class="mb3">
                 <label class="mx-3" for="content">content</label>
                 <textarea type="text" name="content" id="content" class="form-control my-label"
-                    v-model="this.store.message_content" required></textarea>
+                    v-model="this.store.message_content" required minlength="5" maxlength="300"></textarea>
             </div>
 
             <!-- email -->
             <div class="mb3">
                 <label class="mx-3" for="email">email</label>
                 <input type="email" name="email" id="email" class="form-control my-label" v-model="this.store.message_email"
-                    required>
+                    required minlength="5" maxlength="100">
             </div>
 
             <!-- submit -->
