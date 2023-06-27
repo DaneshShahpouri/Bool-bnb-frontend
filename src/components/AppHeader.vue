@@ -19,15 +19,20 @@ export default {
   <nav id="navbar" class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
     <div class="container">
       <a class="navbar-brand d-flex align-items-center" href="http://localhost:5173/">
-        <div id="logo">
+        
+        <div class="logo">
           <img src="../../public/img/boolbnb-logo.png" alt="">
         </div>
+        <div class="logo-mobile">
+          <img src="../../public/img/boolbnb-logo.png" alt="">
+        </div>
+        
       </a>
 
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="">
         <span class="navbar-toggler-icon"></span>
-      </button>
+      </button> -->
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <!-- Left Side Of Navbar -->
@@ -50,12 +55,7 @@ export default {
           <li class="nav-item" v-if="this.store.userName == ''">
             <a class="nav-link" href="http://127.0.0.1:8000/register">Register</a>
           </li>
-          <!-- @if (Route::has('register'))
-          <li class="nav-item">
-            <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-          </li>
-          @endif
-          @else -->
+          
           <li class="nav-item dropdown" v-else>
             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
               aria-haspopup="true" aria-expanded="false"
@@ -79,13 +79,46 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-#navbar {
-  #logo {
-    width: 150px;
+@import '../scss/_variables';
 
-    img {
-      width: 100%;
+#navbar {
+
+  .container{
+
+    @media screen and (max-width: $mobile) {
+        display: flex;
+        justify-content: center;
+      }
+
+
+    .logo {
+      width: 150px;
+  
+      @media screen and (max-width: $mobile) {
+        display: none;
+      }
+  
+      img {
+        width: 100%;
+      }
+    }
+  
+    .logo-mobile{
+      display: none;
+  
+      width: 150px;
+  
+  
+  
+      @media screen and (max-width: $mobile) {
+        display: block;
+      }
+  
+      img {
+        width: 100%;
+      }
     }
   }
 }
+
 </style>

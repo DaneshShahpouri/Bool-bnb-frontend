@@ -40,9 +40,11 @@ export default {
 
 <style lang="scss" scoped>
 
-@use '../scss/_variables' as *;
+@import '../scss/_variables';
 
 ._card {
+  position: relative;
+
   width: calc(100% / 4 - 50px / 5 * 4);
   height: 400px;
 
@@ -52,20 +54,26 @@ export default {
 
   transition: all .2s ease-in-out;
 
-  @media (max-width: $mobile) {
-    margin: 0 auto;
-
-    width: calc(100% - 50px / 2);
+  @media screen and (max-width: $pd) {
+    
+    width: calc(100% / 3 - 50px / 4 * 3);
   }
 
-  @media (max-width: $tablet) {
+  @media screen and (max-width: $mid) {
+    
+    width: calc(100% / 2 - 50px / 3 * 2);
+  }
+
+
+  @media screen and (max-width: $tablet) {
 
     width: calc(100% / 2 - 50px / 3 * 2);
   }
 
-  @media (max-width: $mid) {
-    
-    width: calc(100% / 3 - 50px / 4 * 3);
+  @media screen and (max-width: $mobile) {
+    margin: 0 auto;
+
+    width: calc(100% - 50px / 2);
   }
 
   img {
@@ -75,13 +83,9 @@ export default {
     border-radius: 20px;
 
     object-fit: cover;
-
-
   }
 
   ._card-body {
-    position: relative;
-
     padding: 8px;
 
     height: 25%;
@@ -92,7 +96,7 @@ export default {
       width: 22px;
       height: 22px;
       border-radius: 50%;
-      top: -30px;
+      top: 280px;
       left: 10px;
       color: rgb(239, 110, 5);
       background-color: white;
@@ -101,8 +105,6 @@ export default {
         margin-left: .18em;
       }
     }
-
-    //Medaglietta Sponsorship
 
     .name {
       font-size: 1.2em;
@@ -126,10 +128,29 @@ export default {
 
     .like {
       position: absolute;
-      top: 10px;
+      top: 320px;
       right: 20px;
 
       font-size: 1.4em;
+
+      @media screen and (max-width: $pd) {
+        top: 10px;
+      }
+    
+      @media screen and (max-width: $mid) {
+        
+        
+      }
+    
+    
+      @media screen and (max-width: $tablet) {
+    
+        
+      }
+    
+      @media screen and (max-width: $mobile) {
+        
+      }
     }
 
   }

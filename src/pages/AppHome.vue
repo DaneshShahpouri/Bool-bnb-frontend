@@ -59,6 +59,20 @@ export default {
 
         },
 
+        scrollLeft(id){
+            let left = document.querySelector(id);
+            
+            left.scrollBy(-1400, 0);
+            
+            console.log(event)
+        },
+        
+        scrollRight(id){
+            let right = document.querySelector(id);
+            
+            right.scrollBy(1400, 0);
+        },
+
 
     },
 
@@ -96,6 +110,22 @@ export default {
     <div class="alert alert-danger container" role="alert" v-else>
         {{ this.store.searchError }}
     </div> -->
+    <div class="sponsor-container">
+        <div class="title">Featured</div>
+
+        <div class="slider">
+          <div @click="scrollLeft('#inner-container')" class="slider-btn btn-left">
+            <i class="fa-solid fa-chevron-left"></i>
+          </div>
+          <div @click="scrollRight('#inner-container')" class="slider-btn btn-right">
+            <i class="fa-solid fa-chevron-right"></i>
+          </div>
+        <div class="inner-container">
+          <apartmentCard v-for="apartment in this.store.indexApartmentSponsor" :apartment="apartment"></apartmentCard>
+        </div>
+    </div>
+        
+    </div>
     <div class="loading w-100 h-100 d-flex justify-content-center align-items-center"
         v-if="this.store.searchError === '' && this.store.indexApartments.length == 0">
         <div class="spinner-border text-danger" role="status">
@@ -118,6 +148,61 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+
+.sponsor-container{
+
+    .title{
+
+    }
+
+    .slider{
+    position: relative;
+    
+    .slider-btn{
+    position: absolute;
+    top: 80px;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 3;
+
+    height: 63%;
+    width: 50px;
+
+    font-size: 1.8em;
+
+    background-color: rgba(0, 0, 0, 0.4);
+
+    cursor: pointer;
+
+    &.btn-left{
+      left: 0;
+    }
+
+    &.btn-right{
+      right: 0;
+    }
+  }
+}
+
+.inner-container{
+    position: relative;
+    
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 20px;
+    overflow-x: auto;
+
+    padding: 80px 60px 30px 60px;
+
+    width: 100%;
+
+    scroll-behavior: smooth; 
+  }
+
+}
 .cards-container {
     display: flex;
     flex-flow: row wrap;
@@ -126,8 +211,6 @@ export default {
     margin: 0 auto;
     padding-bottom: 50px;
 
-    width: 90%;
-
-   
+    width: 90%; 
 }
 </style>
