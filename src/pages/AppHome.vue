@@ -127,5 +127,7 @@ export default {
     padding-bottom: 50px;
 
     width: 90%;
+
+   
 }
 </style>

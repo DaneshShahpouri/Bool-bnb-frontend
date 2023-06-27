@@ -39,8 +39,11 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+
+@use '../scss/_variables' as *;
+
 ._card {
-  width: calc(100% / 3 - 50px / 4 * 3);
+  width: calc(100% / 4 - 50px / 5 * 4);
   height: 400px;
 
   text-decoration: none;
@@ -48,6 +51,22 @@ export default {
   color: unset;
 
   transition: all .2s ease-in-out;
+
+  @media (max-width: $mobile) {
+    margin: 0 auto;
+
+    width: calc(100% - 50px / 2);
+  }
+
+  @media (max-width: $tablet) {
+
+    width: calc(100% / 2 - 50px / 3 * 2);
+  }
+
+  @media (max-width: $mid) {
+    
+    width: calc(100% / 3 - 50px / 4 * 3);
+  }
 
   img {
     width: 100%;
@@ -89,6 +108,8 @@ export default {
       font-size: 1.2em;
 
       margin-bottom: 0px;
+
+      padding-bottom: 4px;
     }
 
     .address {
@@ -100,7 +121,7 @@ export default {
 
     .price {
 
-      font-size: 1.2em;
+      font-size: 1.1em;
     }
 
     .like {
