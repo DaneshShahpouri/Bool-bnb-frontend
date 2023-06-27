@@ -40,11 +40,10 @@ export default {
 
 <style lang="scss" scoped>
 
-@use '../scss/variables' as *;
+@use '../scss/_variables' as *;
 
 ._card {
-  min-width: 340px;
-  width: calc(100% / 3 - 50px / 4 * 3);
+  width: calc(100% / 4 - 50px / 5 * 4);
   height: 400px;
 
   text-decoration: none;
@@ -56,12 +55,17 @@ export default {
   @media (max-width: $mobile) {
     margin: 0 auto;
 
-    width: calc(90% - 50px / 2);
+    width: calc(100% - 50px / 2);
   }
 
   @media (max-width: $tablet) {
 
     width: calc(100% / 2 - 50px / 3 * 2);
+  }
+
+  @media (max-width: $mid) {
+    
+    width: calc(100% / 3 - 50px / 4 * 3);
   }
 
   img {
