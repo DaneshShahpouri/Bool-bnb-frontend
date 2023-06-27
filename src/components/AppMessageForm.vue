@@ -124,6 +124,9 @@ export default {
 
     #appMessageForm {
 
+        position: sticky;
+        top: 30px;
+
         border: 1px solid lightgray;
         border-radius: 7px;
         padding: 1.5em;
