@@ -35,9 +35,12 @@ export default {
                 })
             } else {
                 axios.get(this.store.apiPath + 'apartments').then(response => {
-                    //console.log(response)
+                    console.log(response.data)
+                    //console.log('siamo nella results')
                     this.store.apartments = []
-                    response.data.results.forEach(apartment => {
+                    let tempapartments = Object.values(response.data.results)
+                    //console.log(tempapartments)
+                    tempapartments.forEach(apartment => {
                         this.store.apartments.push(JSON.parse(JSON.stringify(apartment)))
                         // this.store.userName = response.data.user
 
@@ -103,9 +106,9 @@ export default {
     <div class="result" v-else>
 
         <div class="cards-container" v-if="this.store.searchError === ''">
-            
-                <apartmentCard v-for="apartment in this.store.indexApartments" :apartment="apartment"></apartmentCard>
-            
+
+            <apartmentCard v-for="apartment in this.store.indexApartments" :apartment="apartment"></apartmentCard>
+
 
         </div>
         <div class="alert alert-danger container" role="alert" v-else>

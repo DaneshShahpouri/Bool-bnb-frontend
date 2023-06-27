@@ -185,7 +185,7 @@ export default {
             } else if (this.store.searchInput == '' && (this.searchInputRooms != '' || this.searchInputBeds != '' || this.searchInputBathrooms != '' || lastServices.length != 0)) {
                 axios.get('http://127.0.0.1:8000/api/apartmentempty/' + (this.searchInputRooms == '' ? '0/' : this.searchInputRooms + '/') + (this.searchInputBeds == '' ? '0/' : this.searchInputBeds + '/') + (this.searchInputBathrooms == '' ? '0/' : this.searchInputBathrooms) + lastServices).then(resul => {
                     //console.log(res.data.results)
-                    console.log('http://127.0.0.1:8000/api/apartmentempty/' + (this.searchInputRooms == '' ? '0/' : this.searchInputRooms + '/') + (this.searchInputBeds == '' ? '0/' : this.searchInputBeds + '/') + (this.searchInputBathrooms == '0/' ? '' : this.searchInputBathrooms) + lastServices)
+                    //console.log('http://127.0.0.1:8000/api/apartmentempty/' + (this.searchInputRooms == '' ? '0/' : this.searchInputRooms + '/') + (this.searchInputBeds == '' ? '0/' : this.searchInputBeds + '/') + (this.searchInputBathrooms == '0/' ? '' : this.searchInputBathrooms) + lastServices)
                     this.store.indexApartments = [];
                     if (resul.data.results.length == 0) {
                         this.store.searchError = 'Sorry. No matching items found.'
@@ -286,14 +286,14 @@ export default {
 
         <div class="input-group my-3">
             <button class="input-group-text btn" :class="this.isAdvanceSearch ? '_btn-search' : '_btn-unsearch'"
-                @click="searchBool()">Advance Search</button>
+                @click="searchBool()">Advanced Search</button>
             <!-- input di ricerca city -->
             <input type="text" aria-label="search" class="form-control _search" v-model="this.store.searchInput"
                 @input="advicedCity(), backSearch(), setIsSearch()" placeholder="Search by city or address"
                 v-if="isAdvanceSearch">
             <!-- input di ricerca name -->
             <input type="text" aria-label="search" class="form-control _search" v-model="this.store.searchInputName"
-                @input="getApartments()" placeholder="Search by name" v-else>
+                @input="getApartments()" placeholder="Search by name or address" v-else>
 
             <!-- suggerimenti Indirizzi -->
             <div class="_menu-suggerimenti "
