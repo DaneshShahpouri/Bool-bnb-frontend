@@ -31,11 +31,18 @@ export default {
                         // this.store.userName = response.data.user
 
                     });
+
                     this.setApartments()
                 })
             } else {
                 axios.get(this.store.apiPath + 'apartments').then(response => {
-                    console.log(response.data)
+
+                    response.data.sponsorRes?.forEach(apartment => {
+                        this.store.indexApartmentsSponsor.push(JSON.parse(JSON.stringify(apartment)))
+                        // this.store.userName = response.data.user
+
+                    });
+                    //console.log(this.store.indexApartmentsSponsor)
                     //console.log('siamo nella results')
                     this.store.apartments = []
                     let tempapartments = Object.values(response.data.results)
@@ -75,27 +82,6 @@ export default {
 <template>
     <AppSearch></AppSearch>
 
-    <!-- <div class="container align-items-stretch mt-5" id="AppHome" v-if="this.store.searchError === ''">
-        <div class="card _card" v-for="apartment in  this.store.indexApartments ">
-            <div class="img-wrapper">
-                <img class="card-img-top"
-                    :src="(apartment.cover_image != null && (apartment.cover_image.slice(apartment.cover_image.length - 3, apartment.cover_image.length) == 'png' || apartment.cover_image.slice(apartment.cover_image.length - 3, apartment.cover_image.length) == 'jpg' || apartment.cover_image.slice(apartment.cover_image.length - 3, apartment.cover_image.length) == 'ebp' || apartment.cover_image.slice(apartment.cover_image.length - 3, apartment.cover_image.length) == 'peg') ? (this.store.urlImg + apartment.cover_image) : 'https://www.kuleuven.be/communicatie/congresbureau/fotos-en-afbeeldingen/no-image.png/image')"
-                    alt="Card image cap">
-            </div>
-            <h5 class="card-title">{{ apartment.name.length > 25 ? apartment.name.substring(0, 25) + '...' :
-                apartment.name }}</h5>
-            <span class="address"> {{ apartment.address }}</span>
-            <div class="card-body d-flex flex-column justify-content-between">
-                <p class="card-text">{{ apartment.description.length > 50 ? apartment.description.substring(0, 50) + '...' :
-                    apartment.description }}</p>
-                <router-link :to="{ name: 'apartments/show', params: { slug: apartment.slug } }"
-                    class="btn btn-outline-primary">See Details</router-link>
-            </div>
-        </div>
-    </div>
-    <div class="alert alert-danger container" role="alert" v-else>
-        {{ this.store.searchError }}
-    </div> -->
     <div class="loading w-100 h-100 d-flex justify-content-center align-items-center"
         v-if="this.store.searchError === '' && this.store.indexApartments.length == 0">
         <div class="spinner-border text-danger" role="status">
@@ -104,6 +90,12 @@ export default {
         <span>{{ this.store.searchError }}</span>
     </div>
     <div class="result" v-else>
+        <div class="container">
+            <h3>Sponsored</h3>
+            <div class="card" v-for="apartment in this.store.indexApartmentsSponsor">
+                {{ apartment.name }}
+            </div>
+        </div>
 
         <div class="cards-container" v-if="this.store.searchError === ''">
 
@@ -128,6 +120,6 @@ export default {
 
     width: 90%;
 
-   
+
 }
 </style>
