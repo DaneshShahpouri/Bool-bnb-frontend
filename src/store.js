@@ -7,6 +7,9 @@ export const store = reactive({
     //quelli visualizzati in home
     indexApartments: [],
 
+    //Sponsor Index Apartment
+    indexApartmentsSponsor :[],
+
     //USER
     userName: '',
 

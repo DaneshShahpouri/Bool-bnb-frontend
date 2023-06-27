@@ -300,7 +300,8 @@ export default {
                 v-if="this.store.searchInput != '' && this.store.arraySuggestion.length != 0 && this.store.searchInput.length > 3 && this.isSuggest === true">
                 <ul>
                     <li v-for=" element  in  this.store.arraySuggestion "
-                        @click="setInput(element.address.freeformAddress)"><i class="fa-solid fa-location-dot _location-icon"></i> {{
+                        @click="setInput(element.address.freeformAddress)"><i
+                            class="fa-solid fa-location-dot _location-icon"></i> {{
                                 element.address.freeformAddress }}</li>
                 </ul>
             </div>
@@ -384,6 +385,7 @@ export default {
     margin-bottom: 5em;
     position: relative;
 }
+
 ._range {
     margin-top: 2em;
 
@@ -623,4 +625,14 @@ export default {
 }
 
 // SERVICES
+
+//medium
+@media screen and (max-width: 768px) {
+    #appSearch {}
+}
+
+//small
+@media screen and (max-width: 576px) {
+    #appSearch {}
+}
 </style>

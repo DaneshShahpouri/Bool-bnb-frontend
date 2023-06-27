@@ -31,11 +31,18 @@ export default {
                         // this.store.userName = response.data.user
 
                     });
+
                     this.setApartments()
                 })
             } else {
                 axios.get(this.store.apiPath + 'apartments').then(response => {
-                    console.log(response.data)
+
+                    response.data.sponsorRes?.forEach(apartment => {
+                        this.store.indexApartmentsSponsor.push(JSON.parse(JSON.stringify(apartment)))
+                        // this.store.userName = response.data.user
+
+                    });
+                    //console.log(this.store.indexApartmentsSponsor)
                     //console.log('siamo nella results')
                     this.store.apartments = []
                     let tempapartments = Object.values(response.data.results)
@@ -134,6 +141,12 @@ export default {
         <span>{{ this.store.searchError }}</span>
     </div>
     <div class="result" v-else>
+        <div class="container">
+            <h3>Sponsored</h3>
+            <div class="card" v-for="apartment in this.store.indexApartmentsSponsor">
+                {{ apartment.name }}
+            </div>
+        </div>
 
         <div class="cards-container" v-if="this.store.searchError === ''">
 
