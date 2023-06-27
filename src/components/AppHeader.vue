@@ -50,10 +50,11 @@ export default {
           <!-- Authentication Links -->
           <!-- @guest -->
           <li class="nav-item" v-if="this.store.userName == ''">
-            <a class="nav-link" href="http://127.0.0.1:8000/login">Login</a>
-          </li>
-          <li class="nav-item" v-if="this.store.userName == ''">
-            <a class="nav-link" href="http://127.0.0.1:8000/register">Register</a>
+            <a class="nav-link" href="http://127.0.0.1:8000/login">
+              <button class="btn _btn">
+                <i class="fa-solid fa-feather-pointed icon me-1"></i>Admin
+              </button>
+            </a>
           </li>
           
           <li class="nav-item dropdown" v-else>
@@ -82,6 +83,26 @@ export default {
 @import '../scss/_variables';
 
 #navbar {
+
+  ._btn{
+    border: 2px solid rgb(255, 90, 95);
+
+    font-weight: bold;
+
+    .icon{
+      color: rgb(255, 90, 95);
+    }
+    &:hover{
+      background-color: rgb(255, 90, 95);
+
+      color: white;
+
+      &:hover .icon{
+        color: white;
+      }
+    }
+  }
+
 
   .container{
 

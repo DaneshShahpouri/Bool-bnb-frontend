@@ -29,4 +29,5 @@ export const store = reactive({
     searchInputName: '',
     searchRange: 20,
     arraySuggestion: [],
+    isSearching: false,
 });

@@ -72,9 +72,9 @@ export default {
   }
 
   @media screen and (max-width: $mobile) {
-    margin: 0 auto;
 
     width: calc(100% - 50px / 2);
+    
   }
 
   img {
