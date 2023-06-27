@@ -6,6 +6,7 @@ export default {
   data() {
     return {
       store,
+
     }
   },
 
@@ -44,7 +45,7 @@ export default {
   position: relative;
 
   width: calc(100% / 4 - 50px / 5 * 4);
-  height: 400px;
+  height: 410px;
 
   flex-shrink: 0;
 

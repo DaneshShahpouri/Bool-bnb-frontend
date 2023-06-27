@@ -382,7 +382,7 @@ export default {
     padding: 1.5em;
     width: 90%;
     margin: 1em auto;
-    margin-bottom: 5em;
+    margin-bottom: 2em;
     position: relative;
 }
 

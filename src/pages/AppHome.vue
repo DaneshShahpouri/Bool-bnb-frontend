@@ -3,6 +3,7 @@ import axios from 'axios';
 import { store } from '../store.js';
 import AppSearch from '../components/AppSearch.vue';
 import ApartmentCard from '../components/ApartmentCard.vue';
+import SponsoredCard from '../components/SponsoredCard.vue';
 
 export default {
     name: 'AppHome',
@@ -18,6 +19,7 @@ export default {
     components: {
         AppSearch,
         ApartmentCard,
+        SponsoredCard,
     },
 
     methods: {
@@ -117,22 +119,7 @@ export default {
     <div class="alert alert-danger container" role="alert" v-else>
         {{ this.store.searchError }}
     </div> -->
-    <div class="sponsor-container">
-        <div class="title">Featured</div>
-
-        <div class="slider">
-          <div @click="scrollLeft('#inner-container')" class="slider-btn btn-left">
-            <i class="fa-solid fa-chevron-left"></i>
-          </div>
-          <div @click="scrollRight('#inner-container')" class="slider-btn btn-right">
-            <i class="fa-solid fa-chevron-right"></i>
-          </div>
-        <div class="inner-container">
-          <apartmentCard v-for="apartment in this.store.indexApartmentSponsor" :apartment="apartment"></apartmentCard>
-        </div>
-    </div>
-        
-    </div>
+    
     <div class="loading w-100 h-100 d-flex justify-content-center align-items-center"
         v-if="this.store.searchError === '' && this.store.indexApartments.length == 0">
         <div class="spinner-border text-danger" role="status">
@@ -141,18 +128,32 @@ export default {
         <span>{{ this.store.searchError }}</span>
     </div>
     <div class="result" v-else>
-        <div class="container">
-            <h3>Sponsored</h3>
-            <div class="card" v-for="apartment in this.store.indexApartmentsSponsor">
-                {{ apartment.name }}
+    
+        <div class="wrapper" v-if="this.store.searchError === ''">
+            <div class="sponsor-container">
+                <div class="title">Featured <i class="fa-solid fa-rocket icon"></i></div>
+                <div class="slider">
+                    
+                    <div @click="scrollLeft('#sponsored-apartments')" class="slider-btn btn-left">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </div>
+                    <div @click="scrollRight('#sponsored-apartments')" class="slider-btn btn-right">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                    <div id="sponsored-apartments" class="inner-container">
+                        <sponsoredCard v-for="apartment in this.store. indexApartmentsSponsor" :apartment="apartment"></sponsoredCard>
+                    </div>
+                    
+                </div>
             </div>
-        </div>
 
-        <div class="cards-container" v-if="this.store.searchError === ''">
+            <div class="_title">All <i class="fa-solid fa-earth-americas icon"></i></div>
 
-            <apartmentCard v-for="apartment in this.store.indexApartments" :apartment="apartment"></apartmentCard>
+            <div class="cards-container">
+                
+                <apartmentCard v-for="apartment in this.store.indexApartments" :apartment="apartment"></apartmentCard>
 
-
+            </div>
         </div>
         <div class="alert alert-danger container" role="alert" v-else>
             {{ this.store.searchError }}
@@ -162,68 +163,113 @@ export default {
 
 <style lang="scss" scoped>
 
-.sponsor-container{
 
-    .title{
+.wrapper{
+    display: flex;
+    flex-direction: column;
 
+    .sponsor-container{
+
+        margin-bottom: 30px;
+        
+        .title{
+            margin-left: 100px;
+
+            font-size: 2em;
+            font-weight: bold;
+            
+            .icon{
+                color: rgb(255, 90, 95);
+            }
+        }
+        
+        .slider{
+            position: relative;
+            
+            .slider-btn{
+                position: absolute;
+                top: 40px;
+                
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                
+                z-index: 5;
+                
+                height: 65.3%;
+                width: 50px;
+                
+                font-size: 1.8em;
+                
+                background-color: rgba($color: #000000, $alpha: 0.2);
+
+                color: white;
+
+                // border-radius: 20px;
+                
+                cursor: pointer;
+                
+                &.btn-left{
+                  left: 0px;
+
+                  border-radius: 0 20px 20px 0;
+
+                  &:hover{
+                    background-color: rgba($color: #000000, $alpha: 0.5);
+                    transition: all .3s ease-in-out;
+                  }
+                }
+                
+                &.btn-right{
+                    right: 0px;
+
+                    border-radius: 20px 0 0 20px;
+
+                    &:hover{
+                    background-color: rgba($color: #000000, $alpha: 0.5);
+                    transition: all .3s ease-in-out;
+                  }
+                }
+            }
+        }
+        
+        .inner-container{
+        position: relative;
+        
+        display: flex;
+        flex-flow: row nowrap;
+        gap: 20px;
+        overflow-x: hidden;
+        
+        padding: 40px 60px 40px 60px;
+        
+        width: 100%;
+        
+        scroll-behavior: smooth; 
+        }
+        
     }
 
-    .slider{
-    position: relative;
-    
-    .slider-btn{
-    position: absolute;
-    top: 80px;
-    
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    ._title{
+        margin-left: 100px;
+        margin-bottom: 50px;
 
-    z-index: 3;
-
-    height: 63%;
-    width: 50px;
-
-    font-size: 1.8em;
-
-    background-color: rgba(0, 0, 0, 0.4);
-
-    cursor: pointer;
-
-    &.btn-left{
-      left: 0;
+        font-size: 2em;
+        font-weight: bold;
+        .icon{
+            color: rgb(255, 90, 95);
+        }
     }
-
-    &.btn-right{
-      right: 0;
+    .cards-container {
+        display: flex;
+        
+        flex-flow: row wrap;
+        gap: 50px;
+        
+        margin: 0 auto;
+        padding-bottom: 50px;
+        
+        width: 90%; 
     }
-  }
-}
-
-.inner-container{
-    position: relative;
-    
-    display: flex;
-    flex-flow: row nowrap;
-    gap: 20px;
-    overflow-x: auto;
-
-    padding: 80px 60px 30px 60px;
-
-    width: 100%;
-
-    scroll-behavior: smooth; 
-  }
-
-}
-.cards-container {
-    display: flex;
-    flex-flow: row wrap;
-    gap: 50px;
-
-    margin: 0 auto;
-    padding-bottom: 50px;
-
-    width: 90%; 
 }
 </style>
