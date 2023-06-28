@@ -73,7 +73,7 @@ export default {
         scrollLeft(id) {
             let left = document.querySelector(id);
 
-            left.scrollBy(-1400, 0);
+            left.scrollBy(-323, 0);
 
             console.log(event)
         },
@@ -81,7 +81,7 @@ export default {
         scrollRight(id) {
             let right = document.querySelector(id);
 
-            right.scrollBy(1400, 0);
+            right.scrollBy(323, 0);
         },
 
 
@@ -237,9 +237,14 @@ export default {
 
                 color: white;
 
-                // border-radius: 20px;
-
                 cursor: pointer;
+
+                @media screen and (max-width: $mobile) {
+                    top: 160px;
+
+                    height: 20%;
+                    width: 30px;  
+                }
 
                 &.btn-left {
                     left: 0px;
@@ -278,6 +283,12 @@ export default {
             width: 100%;
 
             scroll-behavior: smooth;
+
+            @media screen and (max-width: $mobile) {
+                padding: 40px 18px;
+            }
+
+                      
         }
 
     }
