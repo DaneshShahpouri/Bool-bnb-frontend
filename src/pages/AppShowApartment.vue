@@ -3,6 +3,7 @@ import axios from 'axios';
 import { store } from '../store.js';
 import AppMessageForm from '../components/AppMessageForm.vue';
 import Map from '../components/Map.vue';
+import AppFooter from '../components/AppFooter.vue';
 
 export default {
     name: 'AppShowApartment',
@@ -16,6 +17,7 @@ export default {
 
     components: {
         AppMessageForm,
+        AppFooter,
 
     },
 
@@ -78,7 +80,7 @@ export default {
 
         <!-- <div class="container d-flex align-items-start"> -->
         <div class="container d-sm-flex">
-            <div class="mainSide m-5">
+            <div class="mainSide">
 
                 <div class="card _card">
                     <div class="img-wrapper">
@@ -117,34 +119,61 @@ export default {
 
                 </div>
 
-                <div class="address-container">
-                    <!-- <hr class="margin last"> -->
-                    <hr class="margin">
-
-                    <div class="address">
-                        <i class="fa-solid fa-location-dot icon"></i>
-                        <strong>{{ apartment.address }}</strong>
-                    </div>
-                </div>
-
+                
             </div>
+            
             <AppMessageForm></AppMessageForm>
+        </div>
+        
+        <div class="address-container">
+            <!-- <hr class="margin last"> -->
+            <hr class="margin last">
 
+            <div class="address">
+                <i class="fa-solid fa-location-dot icon"></i>
+                <strong>{{ apartment.address }}</strong>
+            </div>
         </div>
 
         <div class="container" style="height: 500px;">
             <div id="map" class="map" style="width: 100% ; height: 100%;"></div>
         </div>
 
+
         <div class="d-flex justify-content-center my-5">
             <router-link :to="{ name: 'home' }" class="btn _btn-see">See Others</router-link>
         </div>
     </div>
+
+    <div class="footbar-mobile">
+        <a class="foot-btn" href="http://localhost:5173/">
+            <i class="fa-solid fa-house"></i>
+        </a>
+    
+        <a class="foot-btn">
+            <i class="fa-brands fa-airbnb icon"></i>
+        </a>
+    
+        <a class="foot-btn" href="http://127.0.0.1:8000/login">
+            <i class="fa-solid fa-user-shield"></i>
+        </a>
+    </div>
+    <AppFooter class="_appfooter"></AppFooter>
 </template>
 
 <style lang="scss" scoped>
+@import '../scss/_variables';
 .mainSide {
+    margin-right: 70px;
+    padding-top: 25px;
+
     width: 70%;
+
+    @media screen and (max-width: $mobile) {
+        margin: 0;
+
+        width: 100%; 
+    }
 
     .margin {
         margin-bottom: 40px;
@@ -152,13 +181,16 @@ export default {
 
 
     ._card {
-
         margin-bottom: 30px;
+
+        border-radius: 10px;
+        overflow: hidden;
     }
 
     .img-wrapper {
         height: 400px;
         width: 100%;
+
         overflow: hidden;
 
         img {
@@ -171,11 +203,18 @@ export default {
         margin-bottom: 40px;
 
         font-size: 2em;
-        // font-weight: bold;
+
+        @media screen and (max-width: $mobile) {
+            text-align: center;        
+        }
     }
 
     .desc {
         font-size: 1.2em;
+
+        @media screen and (max-width: $mobile) {
+            padding-left: 10px;
+        }       
     }
 
     .amenities-container {
@@ -207,25 +246,40 @@ export default {
 
     }
 
-    .address-container {
+    
+}
+.address-container {
+    padding: 8px;
+    margin-bottom: 20px;
 
-        .icon {
-            font-size: 1.4em;
-            color: #ff5f64;
-        }
-
-        .address {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.3em;
-        }
+    .icon {
+        font-size: 1.4em;
+        color: #ff5f64;
     }
 
+    .address {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        font-size: 1.3em;
+
+        @media screen and (max-width: $mobile) {
+            justify-content: center; 
+            
+            font-size: 1em;
+        }
+    }
 }
 
 .last {
     width: 1200px;
+
+    @media screen and (max-width: $mobile) {
+            width: 350px;
+
+            margin-bottom: 60px;
+        }
 }
 
 .map {
@@ -245,4 +299,53 @@ export default {
         color: white;
     }
 }
+
+.footbar-mobile {
+        display: none;
+
+        z-index: 8;
+
+        //display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        align-items: center;
+        gap: 40px;
+
+        width: 100%;
+        height: 60px;
+        background-color: rgba(0, 0, 0, 0.738);
+
+        border-radius: 30% 30% 0 0;
+
+        .foot-btn {
+            padding: 0 10px;
+            width: calc(100% / 3 - 40px - 40px / 4 * 3);
+
+            color: white;
+
+            text-align: center;
+            font-size: 1.4em;
+
+            .icon {
+                font-size: 2em;
+                color: rgb(255, 90, 95);
+            }
+        }
+
+        @media screen and (max-width: $mobile) {
+            position: fixed;
+            bottom: 0;
+
+            display: flex;
+        }
+    }
+
+    
+    ._appfooter {
+        margin: auto;
+        
+        @media screen and (max-width: $mobile) {
+            margin-bottom: 2em;
+        }
+    }
 </style>

@@ -73,15 +73,20 @@ export default {
         scrollLeft(id) {
             let left = document.querySelector(id);
 
-            left.scrollBy(-323, 0);
-
-            console.log(event)
+            if(screen.width <= 768){
+                left.scrollBy(-323, 0);
+            } else {
+                left.scrollBy(-1200, 0);
+            }
         },
 
         scrollRight(id) {
             let right = document.querySelector(id);
-
-            right.scrollBy(323, 0);
+            if(screen.width <= 768){
+                right.scrollBy(323, 0);
+            } else {
+                right.scrollBy(1200, 0);
+            }
         },
 
 
@@ -142,8 +147,8 @@ export default {
                 <a class="foot-btn" href="http://localhost:5173/">
                     <i class="fa-solid fa-house"></i>
                 </a>
-
-                <a class="foot-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                
+                <a class="foot-btn">
                     <i class="fa-brands fa-airbnb icon"></i>
                 </a>
 

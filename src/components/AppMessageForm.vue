@@ -108,14 +108,15 @@ export default {
 
             </form>
 
-        </div>
-        <div class="alert" :class="(this.isSend ? 'alert-success' : (this.isError ? 'alert-danger' : ''))" role="alert">
-            {{ this.isSend ? 'Success Request' : (this.isError ? this.error : '') }}
+            <div class="alert message" :class="(this.isSend ? 'alert-success' : (this.isError ? 'alert-danger' : ''))" role="alert">
+                {{ this.isSend ? 'Success Request' : (this.isError ? this.error : '') }}
+            </div>
         </div>
     </div>
 </template>
 
 <style lang="scss" scoped>
+@import '../scss/_variables';
 .container {
     display: flex;
     flex-direction: row;
@@ -133,6 +134,10 @@ export default {
         padding-bottom: 0;
 
         box-shadow: 0px 6px 20px rgba($color: #000000, $alpha: 0.2);
+
+        @media screen and (max-width: $mobile) {
+            position: relative;  
+        }
 
         .title-container {
             display: flex;
@@ -165,6 +170,12 @@ export default {
                 background-color: #ff5f64;
                 color: white;
             }
+        }
+
+        .message{
+            margin: 0;
+
+            border-radius: 10px 10px 0 0;
         }
     }
 }
