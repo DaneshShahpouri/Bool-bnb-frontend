@@ -23,7 +23,7 @@ export default {
                     <a href="#" class=" text-decoration-none 1h-1">
                         <i class="fa-brands fa-airbnb icon"></i>
                     </a>
-                    <span class="mb-3 md-md-0 text-muted">© 2023 TeamTwo Company, Inc</span>
+                    <span class="md-md-0 text-muted">© 2023 TeamTwo Company, Inc</span>
                 </div>
                 <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
                     <li class="ms-3">
