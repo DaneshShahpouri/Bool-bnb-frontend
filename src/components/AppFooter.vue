@@ -17,12 +17,11 @@ export default {
     <div class="container">
 
         <footer class=" py-3 border-top">
-            <div class="_wrapper-footer d-flex flex-wrap justify-content-between align-items-center py-3 my-4 px-4">
+            <div class="_wrapper-footer d-flex flex-wrap align-items-center py-3 my-4 px-4">
 
-                <div class="col-md-4 d-flex align-items-center">
+                <div class="col-md-4 d-flex align-items-center gap-3 marker">
                     <a href="#" class=" text-decoration-none 1h-1">
-                        <img class="mb-3 me-2 mb-md-0 text-muted" style="width: 20px; padding-bottom: 1em;"
-                            src="../../public/img/icon.png" alt="">
+                        <i class="fa-brands fa-airbnb icon"></i>
                     </a>
                     <span class="mb-3 md-md-0 text-muted">© 2023 TeamTwo Company, Inc</span>
                 </div>
@@ -48,8 +47,32 @@ export default {
     </div>
 </template>
 <style lang="scss" scoped>
+@import '../scss/_variables';
 ._wrapper-footer {
+    justify-content: space-between;
+
     max-width: 1200px;
+
+    .marker{
+
+        @media screen and (max-width: $mobile) {
+            margin-bottom: 20px;
+        }
+        
+        .icon{
+            color: #ff5a5f;
+            font-size: 2.4em;
+
+            @media screen and (max-width: $mobile) {
+                font-size: 1.8em;
+            }
+        }
+    }
+
+
+    @media screen and (max-width: $mobile) {
+        justify-content: center;
+    }
 
     ul {
         li {
