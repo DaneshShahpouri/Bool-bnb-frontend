@@ -4,6 +4,7 @@ import { store } from '../store.js';
 import AppSearch from '../components/AppSearch.vue';
 import ApartmentCard from '../components/ApartmentCard.vue';
 import SponsoredCard from '../components/SponsoredCard.vue';
+import AppFooter from '../components/AppFooter.vue';
 
 export default {
     name: 'AppHome',
@@ -20,6 +21,7 @@ export default {
         AppSearch,
         ApartmentCard,
         SponsoredCard,
+        AppFooter,
     },
 
     methods: {
@@ -98,28 +100,8 @@ export default {
 <template>
     <AppSearch></AppSearch>
 
-    <!-- <div class="container align-items-stretch mt-5" id="AppHome" v-if="this.store.searchError === ''">
-        <div class="card _card" v-for="apartment in  this.store.indexApartments ">
-            <div class="img-wrapper">
-                <img class="card-img-top"
-                    :src="(apartment.cover_image != null && (apartment.cover_image.slice(apartment.cover_image.length - 3, apartment.cover_image.length) == 'png' || apartment.cover_image.slice(apartment.cover_image.length - 3, apartment.cover_image.length) == 'jpg' || apartment.cover_image.slice(apartment.cover_image.length - 3, apartment.cover_image.length) == 'ebp' || apartment.cover_image.slice(apartment.cover_image.length - 3, apartment.cover_image.length) == 'peg') ? (this.store.urlImg + apartment.cover_image) : 'https://www.kuleuven.be/communicatie/congresbureau/fotos-en-afbeeldingen/no-image.png/image')"
-                    alt="Card image cap">
-            </div>
-            <h5 class="card-title">{{ apartment.name.length > 25 ? apartment.name.substring(0, 25) + '...' :
-                apartment.name }}</h5>
-            <span class="address"> {{ apartment.address }}</span>
-            <div class="card-body d-flex flex-column justify-content-between">
-                <p class="card-text">{{ apartment.description.length > 50 ? apartment.description.substring(0, 50) + '...' :
-                    apartment.description }}</p>
-                <router-link :to="{ name: 'apartments/show', params: { slug: apartment.slug } }"
-                    class="btn btn-outline-primary">See Details</router-link>
-            </div>
-        </div>
-    </div>
-    <div class="alert alert-danger container" role="alert" v-else>
-        {{ this.store.searchError }}
-    </div> -->
 
+    <!-- Error e loader -->
     <div class="loading w-100 h-100 d-flex justify-content-center align-items-center"
         v-if="this.store.searchError === '' && this.store.indexApartments.length == 0">
         <div class="spinner-border text-danger" role="status">
@@ -130,9 +112,12 @@ export default {
     <div class="result" v-else>
 
         <div class="wrapper" v-if="this.store.searchError === ''">
-            <div class="sponsor-container" v-show="this.store.isSearching == false">
+            <div class="sponsor-container" v-if="this.store.indexApartmentsSponsor.length > 0">
                 <div class="title">Featured <i class="fa-solid fa-rocket icon"></i></div>
                 <div class="slider">
+                    <!-- Sfondo gradiente -->
+                    <!-- <div class="_gradient-background left"></div>
+                    <div class="_gradient-background right"></div> -->
 
                     <div @click="scrollLeft('#sponsored-apartments')" class="slider-btn btn-left">
                         <i class="fa-solid fa-chevron-left"></i>
@@ -141,7 +126,8 @@ export default {
                         <i class="fa-solid fa-chevron-right"></i>
                     </div>
                     <div id="sponsored-apartments" class="inner-container">
-                        <sponsoredCard v-for="apartment in this.store.indexApartmentsSponsor" :apartment="apartment"></sponsoredCard>
+                        <sponsoredCard v-for="apartment in this.store.indexApartmentsSponsor" :apartment="apartment">
+                        </sponsoredCard>
                     </div>
 
                 </div>
@@ -156,24 +142,27 @@ export default {
                 <a class="foot-btn" href="http://localhost:5173/">
                     <i class="fa-solid fa-house"></i>
                 </a>
-                
-                <a class="foot-btn" data-bs-toggle="modal" data-bs-target="#exampleModal" >
+
+                <a class="foot-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
                     <i class="fa-brands fa-airbnb icon"></i>
                 </a>
 
-                <a class="foot-btn" href="http://127.0.0.1:8000/login">  
+                <a class="foot-btn" href="http://127.0.0.1:8000/login">
                     <i class="fa-solid fa-user-shield"></i>
                 </a>
-            </div>      
+            </div>
         </div>
         <div class="alert alert-danger container" role="alert" v-else>
             {{ this.store.searchError }}
         </div>
     </div>
+
+    <AppFooter class="_appfooter"></AppFooter>
 </template>
 
 <style lang="scss" scoped>
 @import '../scss/_variables';
+
 .wrapper {
     display: flex;
     flex-direction: column;
@@ -181,6 +170,7 @@ export default {
     .sponsor-container {
 
         margin-bottom: 30px;
+
 
         .title {
             margin-left: 100px;
@@ -190,7 +180,7 @@ export default {
 
             @media screen and (max-width: $mobile) {
                 margin-left: 0;
-                
+
                 text-align: center;
             }
 
@@ -201,6 +191,32 @@ export default {
 
         .slider {
             position: relative;
+
+            // Grandiete background-color
+            ._gradient-background {
+                position: absolute;
+                top: 0px;
+                z-index: 4;
+                height: 100%;
+                width: 100px;
+                background-color: green;
+
+                &.left {
+                    left: 0px;
+                    background: rgb(252, 252, 252);
+                    background: linear-gradient(90deg, rgba(252, 252, 252, 1) 30%, rgba(0, 0, 0, 0) 80%);
+
+                }
+
+                &.right {
+                    right: 0px;
+                    background: rgb(252, 252, 252);
+                    background: linear-gradient(90deg, rgba(252, 252, 252, 0) 20%, rgb(255, 255, 255) 70%);
+                }
+            }
+
+            // Grandiete background-color
+
 
             .slider-btn {
                 position: absolute;
@@ -278,7 +294,7 @@ export default {
 
             text-align: center;
         }
-            
+
         .icon {
             color: rgb(255, 90, 95);
         }
@@ -297,12 +313,12 @@ export default {
         width: 90%;
     }
 
-    .footbar-mobile{
+    .footbar-mobile {
         display: none;
 
         z-index: 8;
 
-        display: flex;
+        //display: flex;
         flex-direction: row;
         justify-content: space-evenly;
         align-items: center;
@@ -314,7 +330,7 @@ export default {
 
         border-radius: 30% 30% 0 0;
 
-        .foot-btn{
+        .foot-btn {
             padding: 0 10px;
             width: calc(100% / 3 - 40px - 40px / 4 * 3);
 
@@ -323,18 +339,26 @@ export default {
             text-align: center;
             font-size: 1.4em;
 
-            .icon{
+            .icon {
                 font-size: 2em;
                 color: rgb(255, 90, 95);
             }
         }
-        
+
         @media screen and (max-width: $mobile) {
             position: fixed;
             bottom: 0;
 
             display: flex;
         }
+    }
+}
+
+._appfooter {
+    margin: auto;
+
+    @media screen and (max-width: $mobile) {
+        margin-bottom: 2em;
     }
 }
 </style>

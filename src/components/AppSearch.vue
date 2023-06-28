@@ -43,6 +43,10 @@ export default {
             if (this.store.searchInputName != '') {
                 axios.get('http://127.0.0.1:8000/api/apartments/' + encodeURIComponent(this.store.searchInputName)).then(response => {
                     this.store.apartments = []
+
+                    //Sponsored Apartment Empty
+                    this.store.indexApartmentsSponsor = []
+
                     response.data.results.forEach(apartment => {
                         this.store.apartments.push(JSON.parse(JSON.stringify(apartment)))
                     });
@@ -57,6 +61,14 @@ export default {
             } else {
                 axios.get(this.store.apiPath + 'apartments').then(response => {
                     this.store.apartments = []
+
+                    //Sponsored Apartment Empty
+                    response.data.sponsorRes?.forEach(apartment => {
+                        this.store.indexApartmentsSponsor.push(JSON.parse(JSON.stringify(apartment)))
+                        // this.store.userName = response.data.user
+
+                    });
+
                     response.data.results.forEach(apartment => {
                         this.store.apartments.push(JSON.parse(JSON.stringify(apartment)))
                     });
@@ -115,6 +127,9 @@ export default {
                 this.searchInputBathrooms = ''
                 this.timeoutIsSearch = ''
                 this.servicesCheck = []
+
+
+
             } else {
                 this.isAdvanceSearch = true
                 this.isAdvanceSearchAnimation = false
@@ -135,6 +150,8 @@ export default {
                 this.searchInputBathrooms = ''
                 this.timeoutIsSearch = ''
                 this.servicesCheck = []
+
+
             }
 
             this.getApartments()
@@ -147,6 +164,10 @@ export default {
             //services
             this.servicesCheck = []
             let servicesChecked = [];
+
+            //Sponsored Apartment Empty
+            this.store.indexApartmentsSponsor = []
+
             servicesChecked = document.querySelectorAll('._mycheck')
             servicesChecked.forEach(service => {
                 if (service.checked) {
@@ -285,8 +306,10 @@ export default {
     <div id="appSearch">
 
         <div class="input-group my-3">
-            <button class="input-group-text btn" :class="this.isAdvanceSearch ? '_btn-search' : '_btn-unsearch'"
+            <button class="input-group-text btn _large" :class="this.isAdvanceSearch ? '_btn-search' : '_btn-unsearch'"
                 @click="searchBool()">Advanced Search</button>
+            <button class="input-group-text btn _small" :class="this.isAdvanceSearch ? '_btn-search' : '_btn-unsearch'"
+                @click="searchBool()"><i class="fa-solid fa-circle-plus"></i></button>
             <!-- input di ricerca city -->
             <input type="text" aria-label="search" class="form-control _search" v-model="this.store.searchInput"
                 @input="advicedCity(), backSearch(), setIsSearch()" placeholder="Search by city or address"
@@ -312,6 +335,8 @@ export default {
                 <i class="fa-solid fa-door-closed"></i>
                 <input type="number" class="_numb-imput" aria-label="rooms" v-model="searchInputRooms"
                     @change="backSearch()" placeholder="rooms" min="0" max="30">
+                <!-- <input type="number" class="_numb-imput _small" aria-label="rooms" v-model="searchInputRooms"
+                    @change="backSearch()" placeholder="" min="0" max="30"> -->
             </div>
             <!-- beds -->
             <div class="_numb-imput-wrapper" :class="this.isAdvanceSearchAnimation ? 'numb-input-disappear' : ''"
@@ -319,6 +344,8 @@ export default {
                 <i class="fa-solid fa-bed"></i>
                 <input class="_numb-imput" type="number" aria-label="beds" v-model="searchInputBeds" @change="backSearch()"
                     placeholder="beds" min="0" max="60">
+                <!-- <input class="_numb-imput _small" type="number" aria-label="beds" v-model="searchInputBeds"
+                    @change="backSearch()" placeholder="" min="0" max="60"> -->
             </div>
             <!-- bathrooms -->
             <div class="_numb-imput-wrapper" :class="this.isAdvanceSearchAnimation ? 'numb-input-disappear' : ''"
@@ -326,15 +353,53 @@ export default {
                 <i class="fa-solid fa-bath"></i>
                 <input class="_numb-imput" type="number" aria-label="bathrooms" v-model="searchInputBathrooms"
                     @change="backSearch()" placeholder="bath" min="0" max="20">
+                <!-- <input class="_numb-imput _small" type="number" aria-label="bathrooms" v-model="searchInputBathrooms"
+                    @change="backSearch()" placeholder="" min="0" max="20"> -->
             </div>
 
 
             <!-- button - Ricerca avanzata -->
-            <button class="input-group-text btn _btn-search" @click="backSearch()" v-if="isAdvanceSearch">Search</button>
+            <button class="input-group-text btn _btn-search _large" @click="backSearch()"
+                v-if="isAdvanceSearch">Search</button>
             <!-- button - Ricerca per nome -->
-            <button class="input-group-text btn _btn-search" @click="getApartments()" v-else>Search</button>
+            <button class="input-group-text btn _btn-search _large" @click="getApartments()" v-else>Search</button>
+            <button class="input-group-text btn _btn-search _small" @click="backSearch()" v-if="isAdvanceSearch"><i
+                    class="fa-solid fa-magnifying-glass"></i></button>
+            <button class="input-group-text btn _btn-search _small" @click="getApartments()" v-else><i
+                    class="fa-solid fa-magnifying-glass"></i></button>
 
         </div>
+
+        <!-- imput num small -->
+        <div class="_numb-wrapper input-group d-flex _small">
+            <div class="_numb-imput-wrapper_small" :class="this.isAdvanceSearchAnimation ? 'numb-input-disappear' : ''"
+                v-if="isAdvanceSearch">
+                <i class="fa-solid fa-door-closed"></i>
+                <input type="number" class="_numb-imput" aria-label="rooms" v-model="searchInputRooms"
+                    @change="backSearch()" placeholder="rooms" min="0" max="30">
+                <!-- <input type="number" class="_numb-imput" aria-label="rooms" v-model="searchInputRooms"
+                        @change="backSearch()" placeholder="" min="0" max="30"> -->
+            </div>
+            <!-- beds -->
+            <div class="_numb-imput-wrapper_small" :class="this.isAdvanceSearchAnimation ? 'numb-input-disappear' : ''"
+                v-if="isAdvanceSearch">
+                <i class="fa-solid fa-bed"></i>
+                <input class="_numb-imput" type="number" aria-label="beds" v-model="searchInputBeds" @change="backSearch()"
+                    placeholder="beds" min="0" max="60">
+                <!-- <input class="_numb-imput" type="number" aria-label="beds" v-model="searchInputBeds"
+                        @change="backSearch()" placeholder="" min="0" max="60"> -->
+            </div>
+            <!-- bathrooms -->
+            <div class="_numb-imput-wrapper_small" :class="this.isAdvanceSearchAnimation ? 'numb-input-disappear' : ''"
+                v-if="isAdvanceSearch">
+                <i class="fa-solid fa-bath"></i>
+                <input class="_numb-imput" type="number" aria-label="bathrooms" v-model="searchInputBathrooms"
+                    @change="backSearch()" placeholder="bath" min="0" max="20">
+                <!-- <input class="_numb-imput" type="number" aria-label="bathrooms" v-model="searchInputBathrooms"
+                        @change="backSearch()" placeholder="" min="0" max="20"> -->
+            </div>
+        </div>
+
         <!-- services -->
         <div class="bottom-side-search d-flex flex-wrap my-2"
             :class="this.isAdvanceSearchAnimation ? 'services-disappear' : ''" v-if="isAdvanceSearch">
@@ -344,7 +409,7 @@ export default {
                     <span class="h2 d-flex justify-content-center w-100">
                         <i :class="this.getIconsClass(service.icon)"></i>
                     </span>
-                    <span class="_service-name d-flex justify-content-center w-100"> {{ service.name }}</span>
+                    <span class="_service-name text-center"> {{ service.name }}</span>
                 </div>
             </div>
         </div>
@@ -355,16 +420,17 @@ export default {
             <!-- SLIDEBAR - PERSONALIZZATA -->
             <div class="slider-colored" :class="this.isAdvanceSearchAnimation ? 'slider-colored-disappear' : ''">
                 <div class="_slider-bar"
-                    :style="'width: calc(' + this.store.searchRange + '% + ' + (100 - this.store.searchRange) / 25 + 'px);'">
+                    :style="'width: calc(' + (this.store.searchRange * 2) + '% + ' + (100 - this.store.searchRange) / 25 + 'px);'">
                 </div>
                 <div class="_slider-bar _limit"></div>
                 <div class="_slider-button"
-                    :style="'left:calc(' + this.store.searchRange + '% - 13px);transform: translateX(' + (100 - this.store.searchRange) + '%);'">
+                    :style="'left:calc(' + (this.store.searchRange * 2) + '% - 13px);transform: translateX(' + (100 - this.store.searchRange) + '%);'">
                 </div>
             </div>
             <!-- SLIDEBAR - PERSONALIZZATA -->
 
-            <input class="w-75 _slider" type="range" v-model="this.store.searchRange" @change="backSearch()">
+            <input class="w-75 _slider" type="range" v-model="this.store.searchRange" @change="backSearch()" max="50"
+                min="1">
             <span class="_slider-text">Range:
                 <strong>
                     {{ this.store.searchRange }}
@@ -382,8 +448,16 @@ export default {
     padding: 1.5em;
     width: 90%;
     margin: 1em auto;
-    margin-bottom: 2em;
+    margin-bottom: 5em;
     position: relative;
+
+    ._large {
+        display: block;
+    }
+
+    ._small {
+        display: none;
+    }
 }
 
 ._range {
@@ -512,19 +586,24 @@ export default {
 
     ._numb-imput {
         width: 60px;
-        font-size: .9em;
+        font-size: 1em;
         border: none;
 
         &:focus-visible {
             outline: none;
         }
-
     }
+
+
 
     i {
         padding: 0 .5em;
     }
 
+}
+
+._numb-imput-wrapper_small {
+    display: none;
 }
 
 ._btn-search {
@@ -551,8 +630,6 @@ export default {
 
 // SERVICES
 .bottom-side-search {
-    // border-bottom: 1px solid lightgray;
-    // border-top: 1px solid lightgray;
     padding-top: 2em;
     height: 220px;
     overflow: hidden;
@@ -566,7 +643,11 @@ export default {
         transition: all .5s;
 
         span {
+            display: flex;
+            justify-content: center;
+            width: 100%;
             transition: all .5s;
+            color: rgb(109, 108, 108);
         }
 
         &:hover {
@@ -576,14 +657,26 @@ export default {
         ._mycheck {
             position: absolute;
             left: 50%;
+            top: -20px;
             transform: translateX(-30%);
-            height: 60px;
+            height: 90px;
             width: 120px;
+            z-index: 2;
             opacity: 0;
             cursor: pointer;
 
-            &:checked+._myiconwrapper {
+            &:hover+._myiconwrapper {
+                span {
+                    i {
+                        z-index: 1;
+                        scale: 1.05;
+                    }
 
+                    color: rgb(0, 0, 0);
+                }
+            }
+
+            &:checked+._myiconwrapper {
                 span {
                     color: rgb(255, 90, 95);
                 }
@@ -594,15 +687,18 @@ export default {
 
                     background: rgb(255, 90, 95);
                     border: 1px solid rgb(255, 90, 95);
-
                 }
-
             }
-
         }
 
         span {
-            color: rgb(0, 0, 0);
+            color: rgb(84, 84, 84);
+            transition: all .3s;
+
+            i {
+                z-index: 1;
+                transition: all .3s;
+            }
         }
 
         ._service-name::after {
@@ -627,12 +723,451 @@ export default {
 // SERVICES
 
 //medium
-@media screen and (max-width: 768px) {
-    #appSearch {}
+@media screen and (max-width: 868px) {
+    #appSearch {
+        padding: 1em;
+        width: 100%;
+        margin-bottom: 2em;
+
+        ._large {
+            display: none;
+        }
+
+        ._small {
+            display: block;
+        }
+    }
+
+    ._range {
+        margin-top: 2em;
+
+
+        .slider-colored {
+            position: relative;
+            width: 75%;
+            //border: 1px solid rgba(255, 0, 0, 0.505);
+
+            ._slider-bar {
+                height: 8px;
+                border-radius: 12px;
+                background-color: rgb(255, 90, 95);
+                position: absolute;
+                bottom: -11px;
+                z-index: 2;
+
+            }
+
+            ._limit {
+                position: absolute;
+                width: 100%;
+                background-color: white;
+                border: 1px solid rgb(255, 90, 95);
+                z-index: 1;
+            }
+
+            ._slider-button {
+                width: 13px;
+                height: 13px;
+                position: absolute;
+                bottom: -14px;
+                background: rgb(255, 255, 255);
+                border-radius: 50%;
+                border: 1px solid rgb(255, 90, 95);
+                z-index: 3;
+            }
+
+        }
+
+        ._slider-text {
+            font-size: 1.1em;
+            margin-top: .6em;
+
+            strong {
+                color: rgb(255, 90, 95);
+            }
+        }
+
+        ._slider {
+            position: relative;
+            z-index: 4;
+            opacity: 0;
+            cursor: pointer;
+
+            &::-webkit-slider-runnable-track {
+                background-color: none;
+                color: none;
+            }
+
+            &::-webkit-slider-thumb {
+                background-color: none;
+            }
+        }
+
+    }
+
+    ._search {
+        color: rgb(25, 25, 25);
+
+        &:focus {
+            box-shadow: none;
+            border: 1px solid lightgray;
+        }
+
+    }
+
+
+    ._menu-suggerimenti {
+        position: absolute;
+        top: 38px;
+        left: 40px;
+        width: 300px;
+        border: 1px solid lightgray;
+        background: white;
+        z-index: 2;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+
+            li {
+                cursor: pointer;
+                background: white;
+                padding: .5em;
+
+                ._location-icon {
+                    margin-right: .5em;
+                    font-size: .8em;
+                    color: rgb(180, 180, 180);
+                }
+
+                &:hover {
+                    background: rgb(255, 90, 95);
+                    color: white;
+
+                    ._location-icon {
+                        color: rgb(254, 254, 254);
+                    }
+                }
+            }
+        }
+
+    }
+
+    ._numb-wrapper {
+        width: 75%;
+        margin: auto
+    }
+
+    ._numb-imput-wrapper_small {
+        border: 1px solid lightgray;
+        width: calc(100% / 3);
+
+        display: flex;
+        align-items: center;
+
+
+
+        ._numb-imput {
+            width: 100%;
+            height: 35px;
+            font-size: .9em;
+            border: none;
+
+            /* Chrome, Safari, Edge, Opera */
+            input::-webkit-outer-spin-button,
+            input::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+
+            /* Firefox */
+            input[type=number] {
+                -moz-appearance: textfield;
+            }
+
+            &:focus-visible {
+                outline: none;
+            }
+        }
+
+
+
+        i {
+            padding: 0 .5em;
+        }
+
+
+    }
+
+    ._numb-imput-wrapper {
+
+        display: none;
+
+    }
+
+
+
+    ._btn-search,
+    ._btn-unsearch {
+        width: 40px;
+    }
+
+
+    // SERVICES
+    .bottom-side-search {
+        // border-bottom: 1px solid lightgray;
+        // border-top: 1px solid lightgray;
+        padding-top: .5em;
+        height: 150px;
+        overflow: hidden;
+
+        ._mycheckwrapper {
+            width: calc(100% / 6);
+
+            position: relative;
+            padding: 0;
+            border-bottom: 1px solid transparent;
+            color: rgb(92, 92, 92);
+            transition: all .5s;
+
+            ._myiconwrapper::after {
+                //text-decoration: underline;
+                content: '';
+                position: absolute;
+                bottom: -17%;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 8px;
+                height: 8px;
+                background: rgb(255, 255, 255);
+                border: 1px solid rgb(0, 0, 0);
+                border-radius: 50%;
+                transition: all .5s;
+            }
+
+            span {
+                display: none;
+
+            }
+
+            &:hover {
+                color: black;
+            }
+
+            ._mycheck {
+                top: -20px;
+                height: 70px;
+                width: calc((100vw / 6) - 10px);
+
+
+                &:checked+._myiconwrapper::after {
+                    background-color: rgb(255, 90, 95);
+                    border-color: rgb(255, 90, 95);
+                    ;
+
+                }
+            }
+
+        }
+
+
+    }
 }
 
 //small
 @media screen and (max-width: 576px) {
-    #appSearch {}
+    #appSearch {
+        padding: 1em;
+        width: 100%;
+        margin-bottom: 2em;
+
+        ._large {
+            display: none;
+        }
+
+        ._small {
+            display: block;
+        }
+    }
+
+    ._range {
+        margin-top: 2em;
+
+
+        .slider-colored {
+            position: relative;
+            width: 75%;
+
+            ._slider-bar {
+                height: 8px;
+                border-radius: 12px;
+                background-color: rgb(255, 90, 95);
+                position: absolute;
+                bottom: -11px;
+                z-index: 2;
+
+            }
+
+            ._limit {
+                position: absolute;
+                width: 100%;
+                background-color: white;
+                border: 1px solid rgb(255, 90, 95);
+                z-index: 1;
+            }
+
+            ._slider-button {
+                width: 13px;
+                height: 13px;
+                position: absolute;
+                bottom: -14px;
+                background: rgb(255, 255, 255);
+                border-radius: 50%;
+                border: 1px solid rgb(255, 90, 95);
+                z-index: 3;
+            }
+
+        }
+
+        ._slider-text {
+            font-size: 1.1em;
+            margin-top: .6em;
+
+            strong {
+                color: rgb(255, 90, 95);
+            }
+        }
+
+        ._slider {
+            position: relative;
+            z-index: 4;
+            opacity: 0;
+            cursor: pointer;
+
+            &::-webkit-slider-runnable-track {
+                background-color: none;
+                color: none;
+            }
+
+            &::-webkit-slider-thumb {
+                background-color: none;
+            }
+        }
+
+    }
+
+    ._search {
+        color: rgb(25, 25, 25);
+
+        &:focus {
+            box-shadow: none;
+            border: 1px solid lightgray;
+        }
+
+    }
+
+
+    ._menu-suggerimenti {
+        position: absolute;
+        top: 38px;
+        left: 40px;
+        width: 300px;
+
+
+        ul {
+
+
+            li {
+
+                padding: .5em;
+
+                ._location-icon {
+                    margin-right: .5em;
+                    font-size: .8em;
+                    color: rgb(180, 180, 180);
+                }
+
+                &:hover {
+                    background: rgb(255, 90, 95);
+                    color: white;
+
+                    ._location-icon {
+                        color: rgb(254, 254, 254);
+                    }
+                }
+            }
+        }
+
+    }
+
+
+    ._numb-imput-wrapper {
+        display: none;
+
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+    }
+
+    ._numb-imput-wrapper_small {
+
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+    }
+
+
+    ._btn-search,
+    ._btn-unsearch {
+        width: 40px;
+    }
+
+
+    // SERVICES
+    .bottom-side-search {
+
+
+        ._mycheckwrapper {
+            width: calc(100% / 6);
+
+
+            span {
+                display: none;
+                transition: all .5s;
+            }
+
+            &:hover {
+                color: black;
+            }
+
+            ._mycheck {
+                top: -20px;
+                left: 36px;
+                height: 70px;
+                width: calc((100vw / 6) - 10px);
+            }
+        }
+    }
 }
 </style>
