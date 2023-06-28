@@ -108,7 +108,7 @@ export default {
 
                 <hr class="margin">
 
-                <div class="title">What you'll find</div>
+                <div class="title">What you will find</div>
 
                 <div class="amenities-container">
 
