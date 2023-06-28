@@ -223,6 +223,13 @@ export default {
                         this.store.searchError = 'Sorry. No matching items found.'
                     } else {
                         this.store.indexApartments = result.data.results;
+
+                        //Sponsored Apartment Empty
+                        result.data.sponsorRes?.forEach(apartment => {
+                            this.store.indexApartmentsSponsor.push(JSON.parse(JSON.stringify(apartment)))
+                            // this.store.userName = response.data.user
+
+                        });
                     }
 
                 })
