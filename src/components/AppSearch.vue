@@ -29,6 +29,11 @@ export default {
     },
 
     methods: {
+        outsideClick() {
+            this.isSuggest = false;
+        },
+
+
         //mette i servizi in un array
         getServices() {
             axios.get(this.store.apiPath + 'services').then(response => {
@@ -310,7 +315,7 @@ export default {
 }
 </script>
 <template>
-    <div id="appSearch">
+    <div id="appSearch" @click=" outsideClick()">
 
         <div class="input-group my-3">
             <button class="input-group-text btn _large" :class="this.isAdvanceSearch ? '_btn-search' : '_btn-unsearch'"
@@ -319,11 +324,10 @@ export default {
                 @click="searchBool()"><i class="fa-solid fa-circle-plus"></i></button>
             <!-- input di ricerca city -->
             <input type="text" aria-label="search" class="form-control _search" v-model="this.store.searchInput"
-                @input="advicedCity(), backSearch(), setIsSearch()" placeholder="Search by city or address"
-                v-if="isAdvanceSearch">
+                @input="advicedCity()" @change=" backSearch(), setIsSearch()" placeholder="Search by city or address">
             <!-- input di ricerca name -->
-            <input type="text" aria-label="search" class="form-control _search" v-model="this.store.searchInputName"
-                @input="getApartments()" placeholder="Search by name or address" v-else>
+            <!-- <input type="text" aria-label="search" class="form-control _search" v-model="this.store.searchInputName"
+                @input="getApartments()" placeholder="Search by name or address" > -->
 
             <!-- suggerimenti Indirizzi -->
             <div class="_menu-suggerimenti "

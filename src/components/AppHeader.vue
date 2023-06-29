@@ -19,14 +19,14 @@ export default {
   <nav id="navbar" class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
     <div class="container">
       <a class="navbar-brand d-flex align-items-center" href="http://localhost:5173/">
-        
+
         <div class="logo">
           <img src="../../public/img/boolbnb-logo.png" alt="">
         </div>
         <div class="logo-mobile">
           <img src="../../public/img/boolbnb-logo.png" alt="">
         </div>
-        
+
       </a>
 
       <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -38,7 +38,7 @@ export default {
         <!-- Left Side Of Navbar -->
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <a class="nav-link" href="http://localhost:5173/">Home</a>
+            <a class="nav-link " href="http://localhost:5173/">Home</a>
           </li>
           <!-- <li class="nav-item">
             <a class="nav-link" href="#">Apartments</a>
@@ -56,7 +56,7 @@ export default {
               </button>
             </a>
           </li>
-          
+
           <li class="nav-item dropdown" v-else>
             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
               aria-haspopup="true" aria-expanded="false"
@@ -84,62 +84,62 @@ export default {
 
 #navbar {
 
-  ._btn{
+  ._btn {
     border: 2px solid rgb(255, 90, 95);
 
     font-weight: bold;
 
-    .icon{
+    .icon {
       color: rgb(255, 90, 95);
     }
-    &:hover{
+
+    &:hover {
       background-color: rgb(255, 90, 95);
 
       color: white;
 
-      &:hover .icon{
+      &:hover .icon {
         color: white;
       }
     }
   }
 
 
-  .container{
+  .container {
 
     @media screen and (max-width: $mobile) {
-        display: flex;
-        justify-content: center;
-      }
+      display: flex;
+      justify-content: center;
+    }
 
 
     .logo {
       width: 150px;
-  
+
       @media screen and (max-width: $mobile) {
         display: none;
       }
-  
+
       img {
         width: 100%;
       }
     }
-  
-    .logo-mobile{
+
+    .logo-mobile {
       display: none;
-  
+
       width: 150px;
-  
-  
-  
+
+
+
       @media screen and (max-width: $mobile) {
         display: block;
       }
-  
+
       img {
         width: 100%;
       }
     }
   }
 }
-
 </style>
