@@ -187,7 +187,7 @@ export default {
                         let city_lat = res.data.results[0].position.lat
                         let city_lon = res.data.results[0].position.lon
 
-                        axios.get('http://127.0.0.1:8000/api/apartments/getapartment/' + city_lat + '/' + city_lon + '/' + this.store.searchRange + '/' + (this.searchInputRooms == '' ? '0/' : this.searchInputRooms + '/') + (this.searchInputBeds == '' ? '0/' : this.searchInputBeds + '/') + (this.searchInputBathrooms == '' ? '0/' : this.searchInputBathrooms) + lastServices).then(resu => {
+                        axios.get('http://127.0.0.1:8000/api/apartments/getapartment/' + city_lat + '/' + city_lon + '/' + this.store.searchRange + '/' + (this.searchInputRooms == '' ? '0/' : this.searchInputRooms + '/') + (this.searchInputBeds == '' ? '0/' : this.searchInputBeds + '/') + (this.searchInputBathrooms == '' ? '0/' : this.searchInputBathrooms + '/') + lastServices).then(resu => {
                             this.store.indexApartments = [];
                             if (resu.data.results.length == 0) {
                                 this.store.searchError = 'Sorry. No matching items found.'
@@ -209,7 +209,7 @@ export default {
                 })
 
             } else if (this.store.searchInput == '' && (this.searchInputRooms != '' || this.searchInputBeds != '' || this.searchInputBathrooms != '' || lastServices.length != 0)) {
-                axios.get('http://127.0.0.1:8000/api/apartmentempty/' + (this.searchInputRooms == '' ? '0/' : this.searchInputRooms + '/') + (this.searchInputBeds == '' ? '0/' : this.searchInputBeds + '/') + (this.searchInputBathrooms == '' ? '0/' : this.searchInputBathrooms) + lastServices).then(resul => {
+                axios.get('http://127.0.0.1:8000/api/apartmentempty/' + (this.searchInputRooms == '' ? '0/' : this.searchInputRooms + '/') + (this.searchInputBeds == '' ? '0/' : this.searchInputBeds + '/') + (this.searchInputBathrooms == '' ? '0/' : this.searchInputBathrooms + '/') + lastServices).then(resul => {
                     //console.log(res.data.results)
                     //console.log('http://127.0.0.1:8000/api/apartmentempty/' + (this.searchInputRooms == '' ? '0/' : this.searchInputRooms + '/') + (this.searchInputBeds == '' ? '0/' : this.searchInputBeds + '/') + (this.searchInputBathrooms == '0/' ? '' : this.searchInputBathrooms) + lastServices)
                     this.store.indexApartments = [];
