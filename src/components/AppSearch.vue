@@ -596,7 +596,7 @@ export default {
     align-items: center;
 
     ._numb-imput {
-        width: 60px;
+        width: 70px;
         font-size: 1em;
         border: none;
 
