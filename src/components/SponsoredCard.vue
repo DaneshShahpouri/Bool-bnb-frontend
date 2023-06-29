@@ -27,18 +27,17 @@ export default {
         <div class="_sponsorship" v-if="apartment.sponsorships.length > 0"><i class="fa-solid fa-medal"></i></div>
         <h5 class="name">{{ apartment.name }}</h5>
         <div class="address">{{ apartment.address }}</div>
-        <div class="price"> <strong>154&euro;</strong> notte</div>
+        <!-- <div class="price"> <strong>154&euro;</strong> notte</div>
 
         <div class="like">
           <i class="fa-regular fa-heart"></i>
-        </div>
+        </div> -->
       </div>
     </div>
   </router-link>
 </template>
 
 <style lang="scss" scoped>
-
 @import '../scss/_variables';
 
 ._card {
@@ -56,12 +55,12 @@ export default {
   transition: all .2s ease-in-out;
 
   @media screen and (max-width: $pd) {
-    
+
     width: calc(100% / 3 - 50px / 4 * 3);
   }
 
   @media screen and (max-width: $mid) {
-    
+
     width: calc(100% / 2 - 50px / 3 * 2);
   }
 
@@ -74,7 +73,7 @@ export default {
   @media screen and (max-width: $mobile) {
 
     width: calc(100% - 50px / 2);
-    
+
   }
 
   img {
@@ -137,21 +136,13 @@ export default {
       @media screen and (max-width: $pd) {
         top: 10px;
       }
-    
-      @media screen and (max-width: $mid) {
-        
-        
-      }
-    
-    
-      @media screen and (max-width: $tablet) {
-    
-        
-      }
-    
-      @media screen and (max-width: $mobile) {
-        
-      }
+
+      @media screen and (max-width: $mid) {}
+
+
+      @media screen and (max-width: $tablet) {}
+
+      @media screen and (max-width: $mobile) {}
     }
 
   }
