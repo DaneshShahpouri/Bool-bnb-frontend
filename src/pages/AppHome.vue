@@ -73,7 +73,7 @@ export default {
         scrollLeft(id) {
             let left = document.querySelector(id);
 
-            if(screen.width <= 768){
+            if (screen.width <= 768) {
                 left.scrollBy(-323, 0);
             } else {
                 left.scrollBy(-1200, 0);
@@ -82,7 +82,7 @@ export default {
 
         scrollRight(id) {
             let right = document.querySelector(id);
-            if(screen.width <= 768){
+            if (screen.width <= 768) {
                 right.scrollBy(323, 0);
             } else {
                 right.scrollBy(1200, 0);
@@ -107,7 +107,7 @@ export default {
 
 
     <!-- Error e loader -->
-    <div class="loading w-100 h-100 d-flex justify-content-center align-items-center"
+    <div class="loading w-100 h-100 d-flex justify-content-center align-items-center my-5"
         v-if="this.store.searchError === '' && this.store.indexApartments.length == 0">
         <div class="spinner-border text-danger" role="status">
             <span class="visually-hidden">Loading...</span>
@@ -147,7 +147,7 @@ export default {
                 <a class="foot-btn" href="http://localhost:5173/">
                     <i class="fa-solid fa-house"></i>
                 </a>
-                
+
                 <a class="foot-btn">
                     <i class="fa-brands fa-airbnb icon"></i>
                 </a>
@@ -248,7 +248,7 @@ export default {
                     top: 160px;
 
                     height: 20%;
-                    width: 30px;  
+                    width: 30px;
                 }
 
                 &.btn-left {
@@ -293,7 +293,7 @@ export default {
                 padding: 40px 18px;
             }
 
-                      
+
         }
 
     }
